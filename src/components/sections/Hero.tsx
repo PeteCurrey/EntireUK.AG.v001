@@ -41,7 +41,7 @@ export function Hero() {
       ref={heroRef}
       onPointerMove={handlePointerMove}
       onPointerLeave={handlePointerLeave}
-      className="relative min-h-[92vh] flex items-center pt-28 pb-20 bg-brand-void text-white overflow-hidden"
+      className="relative min-h-screen min-h-[100dvh] flex items-center pt-28 pb-16 lg:py-0 bg-brand-void text-white overflow-hidden"
     >
       {/* 0. Aerial Land Radar Hero Background with Parallax */}
       <div
