@@ -5,6 +5,7 @@ import { SectionHeader } from "../ui/SectionHeader";
 import { ScrollReveal } from "../ui/ScrollReveal";
 import { Building2, Trees, Factory, Landmark, MapPin, ArrowRight, ShieldCheck } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 export function OpportunityCategories() {
   const categories = [
@@ -66,8 +67,22 @@ export function OpportunityCategories() {
   ];
 
   return (
-    <Section id="what-we-look-for">
-      <Container>
+    <Section id="what-we-look-for" className="relative overflow-hidden bg-brand-surface/30">
+      {/* Background Aerial Landscape Image */}
+      <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+        <Image
+          src="/images/what-we-look-for-bg.jpg"
+          alt="UK strategic land parcels, brownfield renewal sites, and development opportunities"
+          fill
+          sizes="100vw"
+          quality={85}
+          className="object-cover object-center opacity-30 filter saturate-[0.80] contrast-[1.08]"
+        />
+        {/* Soft atmospheric gradient washes ensuring impeccable legibility */}
+        <div className="absolute inset-0 bg-gradient-to-b from-brand-surface/90 via-white/80 to-brand-surface/95" />
+      </div>
+
+      <Container className="relative z-10">
         <ScrollReveal>
           <SectionHeader
             eyebrow="Target Typologies"
@@ -82,7 +97,7 @@ export function OpportunityCategories() {
             return (
               <ScrollReveal key={idx} delayMs={idx * 75}>
                 <div
-                  className="group border border-brand-edge rounded-sm p-8 bg-white hover:border-brand-electric/50 transition-all duration-300 flex flex-col justify-between h-full relative overflow-hidden card-spatial"
+                  className="group border border-brand-edge/80 rounded-sm p-8 bg-white/95 backdrop-blur-sm hover:bg-white hover:border-brand-electric/50 transition-all duration-300 flex flex-col justify-between h-full relative overflow-hidden card-spatial shadow-sm hover:shadow-md"
                 >
                   {/* Subtle top indicator bar on hover */}
                   <div className="absolute top-0 inset-x-0 h-0.5 bg-brand-electric opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -134,7 +149,7 @@ export function OpportunityCategories() {
 
           {/* Quick Criteria Callout Card */}
           <ScrollReveal delayMs={categories.length * 75}>
-            <div className="border border-brand-edge-dark rounded-sm p-8 bg-brand-graphite text-white flex flex-col justify-between h-full relative overflow-hidden card-spatial">
+            <div className="border border-brand-edge-dark rounded-sm p-8 bg-brand-graphite/95 backdrop-blur-sm text-white flex flex-col justify-between h-full relative overflow-hidden card-spatial shadow-md">
               <div className="absolute top-0 inset-x-0 h-0.5 bg-brand-electric" />
               <div>
                 <div className="flex items-center gap-2 mb-4">
