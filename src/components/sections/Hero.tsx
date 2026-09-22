@@ -66,19 +66,6 @@ export function Hero() {
         <div className="absolute inset-0 bg-gradient-to-b from-brand-void/50 via-transparent to-brand-void/75" />
       </div>
 
-      {/* 1. Spatial Background Grid — Responds with subtle inverted parallax (-4px) */}
-      <div
-        className="absolute inset-0 pointer-events-none opacity-20 transition-transform duration-300 ease-out"
-        style={{
-          backgroundImage:
-            "linear-gradient(to right, rgba(255,255,255,0.06) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.06) 1px, transparent 1px)",
-          backgroundSize: "64px 64px",
-          transform: motionAllowed
-            ? `translate3d(${pointerOffset.x * -4}px, ${pointerOffset.y * -4}px, 0)`
-            : "none",
-        }}
-        aria-hidden="true"
-      />
 
       {/* 2. Ambient Lighting Glows — Parallax shift (10-14px) */}
       <div
