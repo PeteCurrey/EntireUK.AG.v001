@@ -59,11 +59,11 @@ export function Hero() {
           fill
           priority
           sizes="100vw"
-          className="object-cover object-center opacity-45 mix-blend-screen"
+          className="object-cover object-center opacity-65 filter contrast-[1.05] brightness-95"
         />
-        {/* Layered vignette & readability gradients */}
-        <div className="absolute inset-0 bg-gradient-to-r from-brand-void via-brand-void/85 to-brand-void/40" />
-        <div className="absolute inset-0 bg-gradient-to-b from-brand-void/70 via-transparent to-brand-void" />
+        {/* Layered vignette & readability gradients - tuned for enhanced visibility */}
+        <div className="absolute inset-0 bg-gradient-to-r from-brand-void/85 via-brand-void/50 to-brand-void/20" />
+        <div className="absolute inset-0 bg-gradient-to-b from-brand-void/50 via-transparent to-brand-void/75" />
       </div>
 
       {/* 1. Spatial Background Grid — Responds with subtle inverted parallax (-4px) */}
