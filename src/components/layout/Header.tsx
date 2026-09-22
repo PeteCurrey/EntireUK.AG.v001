@@ -32,9 +32,9 @@ export function Header() {
     <>
       <header
         className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
-          scrolled
+          scrolled || mobileMenuOpen
             ? "bg-brand-void/90 backdrop-blur-md border-b border-white/[0.08] shadow-lg shadow-black/20"
-            : "bg-brand-void/70 backdrop-blur-sm border-b border-transparent"
+            : "bg-transparent border-b border-transparent"
         }`}
       >
         <div className="max-w-8xl mx-auto px-5 sm:px-8 lg:px-10">
