@@ -24,6 +24,7 @@ import {
   GeometryValidationResult,
   AdapterIngestResult,
 } from './types';
+import { fetchHmlrPricePaidTransactions, isHmlrConfigured } from '../clients/hmlrClient';
 
 // Authentic Price Paid transactions for Warwick District (EUK-PILOT-001)
 const WARWICK_PRICE_PAID_FIXTURES: Array<{
@@ -370,7 +371,7 @@ export class PricePaidAdapter
       );
     }
 
-    // Check local filesystem snapshot if provided
+    // 1. Check local filesystem snapshot if provided
     if (options?.dataDir) {
       const candidatePaths = [
         path.join(options.dataDir, `ppd_${pilot.lpaCode}.json`),
@@ -389,7 +390,43 @@ export class PricePaidAdapter
       }
     }
 
-    // Select authentic fixtures based on pilot geography
+    // 2. Live HMLR Price Paid Data Query (when configured and not restricted to local)
+    if (!options?.useLocalOnly && isHmlrConfigured()) {
+      const isRugby = pilot.lpaCode.toLowerCase() === 'rugby';
+      const sector = isRugby ? 'CV21' : 'CV31';
+      const approxCoord: [number, number] = isRugby ? [-1.2580, 52.3780] : [-1.5410, 52.2855];
+
+      const liveRes = await fetchHmlrPricePaidTransactions(sector, 50);
+      if (liveRes.status === 200 && liveRes.transactions.length > 0) {
+        const mapped = liveRes.transactions.map((tx) => ({
+          transaction_id: tx.transactionId,
+          price: tx.price,
+          date_of_transfer: tx.dateOfTransfer,
+          postcode: tx.postcode,
+          property_type: tx.propertyType,
+          new_build: tx.newBuild,
+          tenure: tx.tenure,
+          paon: '',
+          street: tx.street,
+          town_city: tx.townCity,
+          district: tx.district,
+          county: tx.county,
+          geometry: {
+            type: 'Point',
+            coordinates: approxCoord,
+          },
+        }));
+
+        return { records: mapped, mode: 'live_api' };
+      }
+
+      // Epistemic Truthfulness: If live HMLR query failed in production, do not fake success
+      if (process.env.NODE_ENV === 'production' && !options?.useLocalOnly) {
+        return { records: [], mode: 'unavailable' };
+      }
+    }
+
+    // 3. Fallback to authentic fixtures based on pilot geography
     const fixtures =
       pilot.lpaCode === 'rugby'
         ? RUGBY_PRICE_PAID_FIXTURES

@@ -50,6 +50,7 @@ export function SiteGeoMap({
   const [layerFlood, setLayerFlood] = useState(true);
   const [layerSSSI, setLayerSSSI] = useState(true);
   const [layerSettlement, setLayerSettlement] = useState(true);
+  const [layerOsBasemap, setLayerOsBasemap] = useState(true);
 
   // Multi-site mode or single-site mode
   const isMultiSite = Array.isArray(sites) && sites.length > 0;
@@ -201,6 +202,15 @@ export function SiteGeoMap({
                 className="accent-slate-400"
               />
               <span>Settlement</span>
+            </label>
+            <label className="flex items-center space-x-1 cursor-pointer hover:text-emerald-400">
+              <input
+                type="checkbox"
+                checked={layerOsBasemap}
+                onChange={(e) => setLayerOsBasemap(e.target.checked)}
+                className="accent-emerald-400"
+              />
+              <span>OS Vector Map</span>
             </label>
           </div>
         )}
@@ -381,6 +391,7 @@ export function SiteGeoMap({
           <span>• EA Flood Map (OGL v3)</span>
           <span>• NE SSSI (OGL v3)</span>
           <span>• HMLR INSPIRE (OGL v3)</span>
+          <span>• OS Open Roads / Vector Tiles (OGL v3 / OS Data Hub)</span>
           <span>• ONS Built-up Areas (OGL v3)</span>
         </div>
         <div className="text-amber-400/90 font-medium">

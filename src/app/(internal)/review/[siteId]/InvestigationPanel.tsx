@@ -20,6 +20,7 @@ import {
   recordOwnershipEvidenceServer,
   recordAvailabilityEvidenceServer,
   recordContactOutcomeServer,
+  verifyHmlrTitleOnlineServer,
 } from './actions';
 import {
   ExternalEvidenceRecord,
@@ -143,6 +144,8 @@ export function InvestigationPanel({
   const [ownRelevance, setOwnRelevance] = useState<'likely_single_owner' | 'multiple_ownership' | 'ownership_complexity' | 'unknown'>('likely_single_owner');
   const [ownNotes, setOwnNotes] = useState('');
   const [isRecordingOwnership, setIsRecordingOwnership] = useState(false);
+  const [isVerifyingHmlr, setIsVerifyingHmlr] = useState(false);
+  const [hmlrFeedback, setHmlrFeedback] = useState<string | null>(null);
 
   // Phase 11: Availability State
   const [availabilityList, setAvailabilityList] = useState(
@@ -201,6 +204,42 @@ export function InvestigationPanel({
       setErrorBanner((err as Error).message || 'Failed to record ownership evidence');
     } finally {
       setIsRecordingOwnership(false);
+    }
+  };
+
+  // Handle live HMLR title verification online
+  const handleVerifyHmlrOnline = async () => {
+    if (!ownTitleRef.trim()) {
+      setHmlrFeedback('Enter a Title Reference (e.g. WK29101) to verify with HMLR.');
+      return;
+    }
+    setIsVerifyingHmlr(true);
+    setHmlrFeedback(null);
+    try {
+      const res = await verifyHmlrTitleOnlineServer({
+        site_id: siteId,
+        site_reference: siteReference,
+        title_reference: ownTitleRef.trim(),
+        recorded_by: 'Sarah Jenkins',
+      });
+      if (res.hmlrResult.status === 'FOUND') {
+        setHmlrFeedback(`Official HMLR verified: ${res.hmlrResult.classOfTitle} title, ${res.hmlrResult.tenure}. Restrictions: ${res.hmlrResult.hasRestrictionsOrEasements ? 'Present' : 'None'}.`);
+        setOwnStatus('VERIFIED');
+        if (res.hmlrResult.tenure) setOwnTenure(res.hmlrResult.tenure as any);
+        setOwnSource('HM Land Registry Official Title Register (Live API)');
+        setOwnershipRecords((prev) => [res.evidence, ...prev]);
+      } else if (res.hmlrResult.status === 'NOT_FOUND') {
+        setHmlrFeedback(`Title not found in HMLR index. Recorded with status UNCONFIRMED.`);
+        setOwnStatus('UNKNOWN');
+        setOwnershipRecords((prev) => [res.evidence, ...prev]);
+      } else {
+        setHmlrFeedback(`HMLR status: ${res.hmlrResult.error || 'Unavailable'}`);
+        setOwnershipRecords((prev) => [res.evidence, ...prev]);
+      }
+    } catch (err: unknown) {
+      setHmlrFeedback(`Verification failed: ${(err as Error).message}`);
+    } finally {
+      setIsVerifyingHmlr(false);
     }
   };
 
@@ -1295,7 +1334,17 @@ export function InvestigationPanel({
           <form onSubmit={handleRecordOwnership} className="p-4 bg-brand-charcoal/60 border border-brand-edge rounded space-y-3">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div>
-                <label className="text-[10px] font-mono uppercase text-brand-steel block mb-1">Title Reference</label>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="text-[10px] font-mono uppercase text-brand-steel">Title Reference</label>
+                  <button
+                    type="button"
+                    onClick={handleVerifyHmlrOnline}
+                    disabled={isVerifyingHmlr || !ownTitleRef.trim()}
+                    className="text-[10px] font-mono text-cyan-400 hover:text-cyan-300 disabled:opacity-40 transition-colors flex items-center space-x-1"
+                  >
+                    <span>{isVerifyingHmlr ? 'Verifying HMLR...' : '⚡ Verify HMLR Live'}</span>
+                  </button>
+                </div>
                 <input
                   type="text"
                   placeholder="e.g. WK184920"
@@ -1393,6 +1442,13 @@ export function InvestigationPanel({
                 className="w-full bg-brand-charcoal border border-brand-edge rounded text-xs text-white p-2 outline-none"
               />
             </div>
+
+            {hmlrFeedback && (
+              <div className="p-2.5 bg-brand-obsidian/90 border border-brand-edge rounded text-xs font-mono text-cyan-300 flex items-start space-x-2">
+                <span className="text-cyan-400 mt-0.5">ℹ</span>
+                <span>{hmlrFeedback}</span>
+              </div>
+            )}
 
             <div className="flex justify-end">
               <button

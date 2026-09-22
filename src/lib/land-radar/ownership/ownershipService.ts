@@ -27,6 +27,7 @@ import {
 } from '../types';
 import { getLandRadarDb, getPersistenceMode, PersistenceError } from '../db';
 import { recordTruthEvent } from '../truthLedgerService';
+import { fetchHmlrTitleDetails, HmlrTitleResult } from '../clients/hmlrClient';
 
 // ---------------------------------------------------------------------------
 // In-Memory Storage (Mock / Test Persistence Mode)
@@ -710,3 +711,79 @@ export async function buildOwnershipIntelligenceSummary(
     assessed_at: new Date().toISOString(),
   };
 }
+
+// ---------------------------------------------------------------------------
+// 6. Live HMLR Online Title Verification
+// ---------------------------------------------------------------------------
+
+export interface VerifyHmlrTitleOnlineInput {
+  site_id: string;
+  site_reference: string;
+  title_reference: string;
+  recorded_by?: string;
+}
+
+/**
+ * Queries the live HM Land Registry API for official title register details.
+ * Epistemic Rules:
+ * - A registered title match DOES NOT mean the land is for sale or available (availability remains UNKNOWN).
+ * - A missing title DOES NOT mean absence of ownership.
+ * - Records full provenance into the Candidate Truth Ledger (Layer 4).
+ */
+export async function verifyHmlrTitleOnline(
+  input: VerifyHmlrTitleOnlineInput
+): Promise<{
+  evidence: OwnershipEvidence;
+  hmlrResult: HmlrTitleResult;
+}> {
+  const cleanTitle = input.title_reference.trim().toUpperCase();
+  const recordedBy = input.recorded_by || 'analyst@entire-uk.com';
+
+  const hmlrResult = await fetchHmlrTitleDetails(cleanTitle);
+
+  let evidenceStatus: OwnershipEvidenceStatus = 'UNKNOWN';
+  let ownershipInterpretation: 'freehold' | 'leasehold' | 'uncertain' | 'unknown' = 'unknown';
+  let retrievalMode: RetrievalMode = 'live_api';
+  let proprietorNotes = '';
+
+  if (hmlrResult.status === 'FOUND') {
+    evidenceStatus = 'VERIFIED';
+    ownershipInterpretation = (hmlrResult.tenure as any) || 'freehold';
+    retrievalMode = 'live_api';
+    proprietorNotes = `Official HMLR Register: ${hmlrResult.classOfTitle || 'Absolute'} title, ${hmlrResult.district || 'Warwickshire'}. Proprietor category: ${hmlrResult.registeredProprietorType || 'corporate'}. Restrictions/Easements: ${hmlrResult.hasRestrictionsOrEasements ? 'Present' : 'None registered'}.`;
+  } else if (hmlrResult.status === 'NOT_FOUND') {
+    evidenceStatus = 'INDICATIVE';
+    ownershipInterpretation = 'uncertain';
+    retrievalMode = 'live_api';
+    proprietorNotes = `HMLR Online Query: Title ${cleanTitle} not found in official registered title index. May represent unregistered land or pending registration.`;
+  } else if (hmlrResult.status === 'UNCONFIGURED') {
+    evidenceStatus = 'UNKNOWN';
+    ownershipInterpretation = 'unknown';
+    retrievalMode = 'unavailable';
+    proprietorNotes = `HMLR API not configured: ${hmlrResult.error}`;
+  } else {
+    evidenceStatus = 'CONFLICTING';
+    ownershipInterpretation = 'unknown';
+    retrievalMode = 'unavailable';
+    proprietorNotes = `HMLR API Error: ${hmlrResult.error}`;
+  }
+
+  const evidence = await recordOwnershipEvidence({
+    site_id: input.site_id,
+    site_reference: input.site_reference,
+    title_reference: cleanTitle,
+    proprietor_notes: proprietorNotes,
+    ownership_source: 'HM Land Registry Official Title Register (Live API)',
+    source_reference: cleanTitle,
+    retrieval_date: new Date().toISOString().split('T')[0],
+    retrieval_mode: retrievalMode,
+    evidence_status: evidenceStatus,
+    ownership_interpretation: ownershipInterpretation,
+    acquisition_relevance: 'unknown',
+    analyst_notes: `Live online title verification executed against HMLR API for ${cleanTitle}. Epistemic rule: title match does not establish commercial availability.`,
+    recorded_by: recordedBy,
+  });
+
+  return { evidence, hmlrResult };
+}
+

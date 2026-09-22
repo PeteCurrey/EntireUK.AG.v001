@@ -21,6 +21,7 @@ import {
   GeometryValidationResult,
   AdapterIngestResult,
 } from './types';
+import { getHmlrConfig, isHmlrConfigured } from '../clients/hmlrClient';
 
 // Authentic registered freehold parcel extents in Warwick District
 const WARWICK_AUTHENTIC_PARCEL_FIXTURES = [
@@ -180,7 +181,7 @@ export class HMLRInspireAdapter implements IngestionAdapter<Record<string, unkno
     pilot: PilotConfig,
     options?: { dataDir?: string; useLocalOnly?: boolean }
   ): Promise<{ records: Record<string, unknown>[]; retrievalMode: RetrievalMode }> {
-    // Check for local file in data directory
+    // 1. Check for local file in data directory
     const candidates = [
       options?.dataDir ? path.join(options.dataDir, `${pilot.lpaCode}-inspire.json`) : null,
       options?.dataDir ? path.join(options.dataDir, `${pilot.lpaCode}-inspire.geojson`) : null,
@@ -200,6 +201,38 @@ export class HMLRInspireAdapter implements IngestionAdapter<Record<string, unkno
       }
     }
 
+    // 2. Live HMLR API Query (when configured and not restricted to local)
+    if (!options?.useLocalOnly && isHmlrConfigured()) {
+      const { apiKey, baseUrl } = getHmlrConfig();
+      try {
+        const queryUrl = `${baseUrl}/datasets/inspire/${pilot.lpaCode.toLowerCase()}`;
+        const res = await fetch(queryUrl, {
+          method: 'GET',
+          headers: {
+            Authorization: apiKey || '',
+            Accept: 'application/json',
+          },
+          signal: AbortSignal.timeout(8000),
+        });
+
+        if (res.ok) {
+          const json = await res.json();
+          const items = Array.isArray(json) ? json : (json.features ?? json.parcels ?? []);
+          if (items.length > 0) {
+            return { records: items, retrievalMode: 'live_api' };
+          }
+        }
+      } catch {
+        // Network or upstream error
+      }
+
+      // Epistemic Truthfulness: If live HMLR query failed in production, do not fake success
+      if (process.env.NODE_ENV === 'production' && !options?.useLocalOnly) {
+        return { records: [], retrievalMode: 'unavailable' };
+      }
+    }
+
+    // 3. Authentic fixtures for offline test environments
     if (pilot.lpaCode.toLowerCase() === 'rugby') {
       return { records: RUGBY_AUTHENTIC_PARCEL_FIXTURES, retrievalMode: 'local_fixture' };
     }

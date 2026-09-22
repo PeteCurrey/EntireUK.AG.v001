@@ -209,6 +209,8 @@ import {
   RecordContactOutcomeInput,
   recordAcquisitionEvidence,
   RecordAcquisitionEvidenceInput,
+  verifyHmlrTitleOnline,
+  VerifyHmlrTitleOnlineInput,
 } from '@/lib/land-radar/ownership/ownershipService';
 
 export async function recordOwnershipEvidenceServer(input: RecordOwnershipEvidenceInput) {
@@ -270,6 +272,19 @@ export async function recordAcquisitionEvidenceServer(input: RecordAcquisitionEv
     throw new PersistenceError(`Failed to record acquisition evidence: ${(err as Error).message}`);
   }
 }
+
+export async function verifyHmlrTitleOnlineServer(input: VerifyHmlrTitleOnlineInput) {
+  await verifyAcquisitionAnalystAuthorization();
+  try {
+    return await verifyHmlrTitleOnline(input);
+  } catch (err: unknown) {
+    if (err instanceof PersistenceError) {
+      throw err;
+    }
+    throw new PersistenceError(`Failed to verify HMLR title online: ${(err as Error).message}`);
+  }
+}
+
 
 
 

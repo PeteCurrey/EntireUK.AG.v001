@@ -23,6 +23,7 @@ import {
   GeometryValidationResult,
   AdapterIngestResult,
 } from './types';
+import { fetchOsRoadLinks, isOsConfigured } from '../clients/osClient';
 
 // Envelope-clipped authentic road networks for pilot geographies
 // Warwick District: Major arterial corridors (A452 Princes Drive, A429, Old Warwick Road, Cape Road, Montague Road)
@@ -179,7 +180,32 @@ export class RoadAdapter
       }
     }
 
-    // 2. Select authentic fixture per pilot geography
+    // 2. Live OS Features API Query (when configured and not restricted to local)
+    if (!options?.useLocalOnly && isOsConfigured()) {
+      const isRugby = pilot.lpaCode.toLowerCase() === 'rugby';
+      const bbox = isRugby
+        ? { minLon: -1.35, minLat: 52.32, maxLon: -1.18, maxLat: 52.42 }
+        : { minLon: -1.65, minLat: 52.24, maxLon: -1.47, maxLat: 52.36 };
+
+      const liveResult = await fetchOsRoadLinks(bbox);
+      if (liveResult.status === 200 && liveResult.features.length > 0) {
+        return {
+          records: (liveResult.features as unknown) as Record<string, unknown>[],
+          retrievalMode: 'live_api',
+        };
+      }
+
+      // Epistemic Truthfulness: If live OS query failed in production, do not fake success
+      if (process.env.NODE_ENV === 'production' && !options?.useLocalOnly) {
+        // Return truthful unavailable state rather than synthetic data
+        return {
+          records: [],
+          retrievalMode: 'unavailable',
+        };
+      }
+    }
+
+    // 3. Fallback to authentic fixtures for offline test environments
     if (pilot.lpaCode.toLowerCase() === 'rugby') {
       return {
         records: RUGBY_AUTHENTIC_ROAD_FIXTURES as Record<string, unknown>[],

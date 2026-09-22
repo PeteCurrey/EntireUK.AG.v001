@@ -32,7 +32,9 @@ export type RetrievalMode =
   | 'cached'
   | 'local_fixture'
   | 'manual_entry'
-  | 'synthetic_test';
+  | 'synthetic_test'
+  | 'unavailable'
+  | 'unknown';
 
 // ---------------------------------------------------------------------------
 // GeoJSON Primitives

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import Image from "next/image";
 import { Container } from "../ui/Container";
 import { Button } from "../ui/Button";
 import { ArrowDownRight, Compass, Layers, ShieldCheck, ChevronRight } from "lucide-react";
@@ -42,6 +43,29 @@ export function Hero() {
       onPointerLeave={handlePointerLeave}
       className="relative min-h-[92vh] flex items-center pt-28 pb-20 bg-brand-void text-white overflow-hidden"
     >
+      {/* 0. Aerial Land Radar Hero Background with Parallax */}
+      <div
+        className="absolute inset-0 pointer-events-none transition-transform duration-700 ease-out scale-105"
+        style={{
+          transform: motionAllowed
+            ? `translate3d(${pointerOffset.x * -8}px, ${pointerOffset.y * -8}px, 0)`
+            : "none",
+        }}
+        aria-hidden="true"
+      >
+        <Image
+          src="/images/hero-bg.jpg"
+          alt="UK land parcels and development potential visualised with spatial intelligence"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-center opacity-45 mix-blend-screen"
+        />
+        {/* Layered vignette & readability gradients */}
+        <div className="absolute inset-0 bg-gradient-to-r from-brand-void via-brand-void/85 to-brand-void/40" />
+        <div className="absolute inset-0 bg-gradient-to-b from-brand-void/70 via-transparent to-brand-void" />
+      </div>
+
       {/* 1. Spatial Background Grid — Responds with subtle inverted parallax (-4px) */}
       <div
         className="absolute inset-0 pointer-events-none opacity-20 transition-transform duration-300 ease-out"

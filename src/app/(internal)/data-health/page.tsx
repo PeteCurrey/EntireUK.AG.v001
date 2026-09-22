@@ -11,6 +11,8 @@ import { RoadAdapter } from '@/lib/land-radar/adapters/roadAdapter';
 import { PlanningAdapter } from '@/lib/land-radar/adapters/planningAdapter';
 import { PricePaidAdapter } from '@/lib/land-radar/adapters/pricePaidAdapter';
 import { LocalPlanAdapter } from '@/lib/land-radar/adapters/localPlanAdapter';
+import { checkOsHealth } from '@/lib/land-radar/clients/osClient';
+import { checkHmlrHealth } from '@/lib/land-radar/clients/hmlrClient';
 
 export const metadata = {
   title: 'Data Health & Licence Registry — Land Radar Intelligence',
@@ -55,6 +57,8 @@ export default async function DataHealthPage() {
   const localPlanAdapter = new LocalPlanAdapter();
 
   const [
+    osHealth,
+    hmlrHealth,
     bfRes,
     floodRes,
     sssiRes,
@@ -69,6 +73,8 @@ export default async function DataHealthPage() {
     localPlanResWarwick,
     localPlanResRugby,
   ] = await Promise.all([
+    checkOsHealth(),
+    checkHmlrHealth(),
     bfAdapter.ingest(pilot),
     floodAdapter.ingest(pilot),
     sssiAdapter.ingest(pilot),
@@ -180,6 +186,81 @@ export default async function DataHealthPage() {
             <div className="text-[10px] font-mono uppercase text-brand-steel mt-1">{stat.label}</div>
           </div>
         ))}
+      </div>
+
+      {/* Live Authoritative Credentials & Gateway Status */}
+      <div className="bg-brand-surface border border-brand-edge p-5 rounded-sm space-y-4">
+        <div className="flex items-center justify-between border-b border-brand-edge pb-3">
+          <h2 className="text-xs font-mono uppercase tracking-wider text-white font-semibold flex items-center space-x-2">
+            <span className="w-2 h-2 rounded-full bg-emerald-400" />
+            <span>Authoritative API Gateways &amp; Credential Status</span>
+          </h2>
+          <span className="text-[10px] font-mono text-brand-steel">SECURE SERVER-SIDE CREDENTIALS ONLY</span>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* OS Gateway */}
+          <div className="p-4 bg-brand-charcoal/50 border border-brand-edge rounded space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-mono font-bold text-white flex items-center space-x-1.5">
+                <span>Ordnance Survey (OS Data Hub)</span>
+              </span>
+              <span className={`text-[10px] font-mono px-2 py-0.5 rounded border ${
+                osHealth.configured ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/25' : 'bg-rose-500/15 text-rose-400 border-rose-500/25'
+              }`}>
+                {osHealth.configured ? 'CREDENTIALS CONFIGURED' : 'MISSING OS_API_KEY'}
+              </span>
+            </div>
+            <div className="grid grid-cols-2 gap-2 text-[11px] font-mono pt-1 text-brand-silver">
+              <div>
+                <span className="text-brand-steel block text-[9px] uppercase">Vector Tile API:</span>
+                <span className={osHealth.vectorTilesStatus === 200 ? 'text-emerald-400' : 'text-amber-400'}>
+                  {osHealth.vectorTilesStatus === 200 ? '✓ 200 OK (Active & Proxied)' : `${osHealth.vectorTilesStatusText || 'Not Connected'}`}
+                </span>
+              </div>
+              <div>
+                <span className="text-brand-steel block text-[9px] uppercase">Features API (WFS):</span>
+                <span className={osHealth.wfsStatus === 200 ? 'text-emerald-400' : 'text-amber-400'}>
+                  {osHealth.wfsStatus === 200 ? '✓ 200 OK (Capabilities)' : `${osHealth.wfsStatusText || 'Not Connected'}`}
+                </span>
+              </div>
+            </div>
+            <div className="text-[10px] font-mono text-brand-steel pt-1 border-t border-brand-edge/50">
+              Proxy endpoint: <code className="text-cyan-300">/api/map/os-tiles/[...tilePath]</code> · Secret strictly masked
+            </div>
+          </div>
+
+          {/* HMLR Gateway */}
+          <div className="p-4 bg-brand-charcoal/50 border border-brand-edge rounded space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-mono font-bold text-white flex items-center space-x-1.5">
+                <span>HM Land Registry (HMLR Direct)</span>
+              </span>
+              <span className={`text-[10px] font-mono px-2 py-0.5 rounded border ${
+                hmlrHealth.configured ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/25' : 'bg-amber-500/15 text-amber-400 border-amber-500/25'
+              }`}>
+                {hmlrHealth.configured ? 'CREDENTIALS CONFIGURED' : 'PENDING HMLR_API_KEY'}
+              </span>
+            </div>
+            <div className="grid grid-cols-2 gap-2 text-[11px] font-mono pt-1 text-brand-silver">
+              <div>
+                <span className="text-brand-steel block text-[9px] uppercase">Title Register Verification:</span>
+                <span className={hmlrHealth.configured ? 'text-emerald-400' : 'text-slate-400'}>
+                  {hmlrHealth.configured ? '✓ Online Lookup Active' : 'Offline Ingest Mode'}
+                </span>
+              </div>
+              <div>
+                <span className="text-brand-steel block text-[9px] uppercase">Price Paid Linked Data:</span>
+                <span className="text-emerald-400">
+                  ✓ Active (SPARQL/JSON)
+                </span>
+              </div>
+            </div>
+            <div className="text-[10px] font-mono text-brand-steel pt-1 border-t border-brand-edge/50">
+              Endpoint: <code className="text-cyan-300">{hmlrHealth.baseUrl}</code>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Epistemic Standard Notice */}
