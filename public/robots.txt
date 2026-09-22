@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /submit/success
+
+Sitemap: https://entire-uk.com/sitemap.xml
