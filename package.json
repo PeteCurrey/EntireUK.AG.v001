@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "tsc --noEmit false --outDir ./dist_test --module commonjs --target ES2022 --esModuleInterop src/lib/land-radar/__tests__/*.ts && node --test dist_test/__tests__/*.test.js && rm -rf dist_test",
+    "test": "tsc --skipLibCheck --noEmit false --outDir ./dist_test --module commonjs --target ES2022 --esModuleInterop src/lib/land-radar/__tests__/*.ts && node --test dist_test/**/__tests__/*.test.js && rm -rf dist_test",
     "pilot": "tsc --noEmit false --outDir ./dist_pilot --module commonjs --target ES2022 --esModuleInterop src/lib/land-radar/pilot/runPilot.ts && node dist_pilot/pilot/runPilot.js --pilot EUK-PILOT-001 --dry-run && rm -rf dist_pilot"
   },
   "dependencies": {

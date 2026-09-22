@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { BrandLogo } from "../ui/BrandMark";
 import { Button } from "../ui/Button";
 import { NAV_LINKS, PRIMARY_CTA } from "@/lib/constants";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Compass, Lock } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
 
 export function Header() {
@@ -74,8 +74,17 @@ export function Header() {
               })}
             </nav>
 
-            {/* Desktop CTAs */}
+            {/* Desktop CTAs: Distinct separation between Public Submission and Internal Platform */}
             <div className="hidden lg:flex items-center gap-3">
+              <Link
+                href="/dashboard"
+                className="text-xs font-light tracking-wider uppercase text-brand-mist/80 hover:text-white px-3 py-2 rounded-sm border border-white/10 hover:border-cyan-400/50 hover:bg-white/[0.03] transition-all flex items-center gap-2"
+                title="Internal Land Radar intelligence platform"
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+                <span>Land Radar Login</span>
+              </Link>
+
               <Button
                 href={PRIMARY_CTA.href}
                 variant="primary"
@@ -92,8 +101,17 @@ export function Header() {
               </Button>
             </div>
 
-            {/* Mobile Menu Toggle Button */}
+            {/* Mobile Menu Controls */}
             <div className="flex items-center gap-2 lg:hidden">
+              <Link
+                href="/dashboard"
+                className="text-xs text-brand-mist hover:text-white px-2.5 py-1.5 rounded-sm border border-white/10 flex items-center gap-1.5"
+                title="Land Radar Login"
+              >
+                <Compass className="w-3 h-3 text-cyan-400" />
+                <span className="text-[11px] font-mono">Radar</span>
+              </Link>
+
               <Button
                 href={PRIMARY_CTA.href}
                 variant="primary"
@@ -153,38 +171,56 @@ export function Header() {
             })}
           </nav>
 
-          <div className="pt-8 border-t border-white/[0.08] space-y-3">
-            <p className="text-xs uppercase tracking-widest text-brand-mist/50">
+          <div className="pt-6 border-t border-white/[0.08] space-y-4">
+            {/* Dedicated Internal Platform Entry */}
+            <div className="p-3.5 rounded-sm bg-brand-carbon border border-cyan-500/30 flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <Compass className="w-4 h-4 text-cyan-400" />
+                <div>
+                  <span className="text-xs font-medium text-white block">Entire UK Land Radar</span>
+                  <span className="text-[10px] text-brand-silver font-light">Internal intelligence workstation</span>
+                </div>
+              </div>
+              <Link
+                href="/dashboard"
+                className="px-2.5 py-1 text-xs font-medium text-cyan-400 bg-cyan-500/10 border border-cyan-500/25 rounded-sm hover:bg-cyan-500/20"
+              >
+                Sign In →
+              </Link>
+            </div>
+
+            {/* Submission shortcuts */}
+            <p className="text-xs uppercase tracking-widest text-brand-mist/50 pt-2">
               Submit Land &amp; Property
             </p>
-            <div className="grid grid-cols-1 gap-2.5">
+            <div className="grid grid-cols-1 gap-2">
               <Link
                 href="/submit/land"
-                className="p-3.5 rounded-sm bg-brand-carbon border border-brand-edge-dark flex items-center justify-between text-sm text-white hover:border-brand-electric/60"
+                className="p-3 rounded-sm bg-brand-carbon/60 border border-brand-edge-dark flex items-center justify-between text-xs text-white hover:border-brand-electric/60"
               >
                 <span>I own land</span>
-                <span className="text-xs text-brand-electric font-medium">Submit Land →</span>
+                <span className="text-[11px] text-brand-electric font-medium">Submit Land →</span>
               </Link>
               <Link
                 href="/submit/property"
-                className="p-3.5 rounded-sm bg-brand-carbon border border-brand-edge-dark flex items-center justify-between text-sm text-white hover:border-brand-electric/60"
+                className="p-3 rounded-sm bg-brand-carbon/60 border border-brand-edge-dark flex items-center justify-between text-xs text-white hover:border-brand-electric/60"
               >
                 <span>I own a property</span>
-                <span className="text-xs text-brand-electric font-medium">Submit Property →</span>
+                <span className="text-[11px] text-brand-electric font-medium">Submit Property →</span>
               </Link>
               <Link
                 href="/submit/opportunity"
-                className="p-3.5 rounded-sm bg-brand-carbon border border-brand-edge-dark flex items-center justify-between text-sm text-white hover:border-brand-electric/60"
+                className="p-3 rounded-sm bg-brand-carbon/60 border border-brand-edge-dark flex items-center justify-between text-xs text-white hover:border-brand-electric/60"
               >
                 <span>I know of an opportunity</span>
-                <span className="text-xs text-brand-electric font-medium">Submit Opportunity →</span>
+                <span className="text-[11px] text-brand-electric font-medium">Submit Opportunity →</span>
               </Link>
               <Link
                 href="/submit/partner"
-                className="p-3.5 rounded-sm bg-brand-carbon border border-brand-edge-dark flex items-center justify-between text-sm text-white hover:border-brand-electric/60"
+                className="p-3 rounded-sm bg-brand-carbon/60 border border-brand-edge-dark flex items-center justify-between text-xs text-white hover:border-brand-electric/60"
               >
                 <span>Professional / Capital Partner</span>
-                <span className="text-xs text-brand-mist font-medium">Partner With Us →</span>
+                <span className="text-[11px] text-brand-mist font-medium">Partner With Us →</span>
               </Link>
             </div>
           </div>

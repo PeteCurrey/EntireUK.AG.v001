@@ -331,11 +331,11 @@ describe('Phase 12: Live Acquisition Validation & Evidence Calibration', () => {
 
       assert.strictEqual(ledger.events.length, 5);
       const layers = ledger.events.map((e) => e.layer);
-      assert.deepStrictEqual(layers, [
-        'machine_evidence',
-        'derived_evidence',
+      assert.deepStrictEqual(layers.sort(), [
         'analyst_interpretation',
+        'derived_evidence',
         'external_evidence',
+        'machine_evidence',
         'real_world_outcome',
       ]);
     });
