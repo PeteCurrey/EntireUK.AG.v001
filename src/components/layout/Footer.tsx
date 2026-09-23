@@ -26,7 +26,7 @@ export function Footer() {
           </div>
 
           {/* Navigation Links */}
-          <div className="lg:col-span-3 space-y-4">
+          <div className="lg:col-span-2 space-y-4">
             <h4 className="text-xs font-medium uppercase tracking-widest text-brand-mist/50">
               Overview &amp; Method
             </h4>
@@ -56,8 +56,27 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Submission Gateways */}
+          {/* Acquisition Criteria & Workstation */}
           <div className="lg:col-span-3 space-y-4">
+            <h4 className="text-xs font-medium uppercase tracking-widest text-brand-mist/50">
+              Acquisition &amp; Radar
+            </h4>
+            <ul className="space-y-2.5 text-sm font-light text-brand-mist/80">
+              {FOOTER_LINKS.acquisition.map((item) => (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    className="hover:text-white transition-colors block"
+                  >
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Submission Gateways */}
+          <div className="lg:col-span-2 space-y-4">
             <h4 className="text-xs font-medium uppercase tracking-widest text-brand-mist/50">
               Opportunity Intake
             </h4>

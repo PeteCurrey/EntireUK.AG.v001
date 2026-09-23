@@ -64,10 +64,17 @@ export const SUBMISSION_TYPES = {
 export const FOOTER_LINKS = {
   company: [
     { label: "About Entire UK", href: "/about" },
-    { label: "Our Approach", href: "/approach" },
+    { label: "Our 7-Stage Approach", href: "/approach" },
+    { label: "Opportunity Typologies", href: "/opportunities" },
     { label: "Technology & Land Radar", href: "/technology" },
-    { label: "Selected Opportunities", href: "/opportunities" },
-    { label: "EntireFM Ecosystem", href: "https://www.entirefm.com", external: true },
+    { label: "EntireFM Built Environment", href: "https://www.entirefm.com", external: true },
+  ],
+  acquisition: [
+    { label: "What We Look For", href: "/#what-we-look-for" },
+    { label: "Acquisition Brief", href: "/#acquisition-brief" },
+    { label: "Site Anatomy (8 Dimensions)", href: "/opportunities#site-anatomy" },
+    { label: "Commercial Structuring", href: "/approach#deal-structures" },
+    { label: "Authorised Analyst Workstation", href: "/dashboard" },
   ],
   submissions: [
     { label: "Submit Your Land", href: "/submit/land" },
@@ -83,3 +90,4 @@ export const FOOTER_LINKS = {
     { label: "Contact Us", href: "/contact" },
   ],
 };
+

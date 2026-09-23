@@ -1,237 +1,272 @@
 import React from "react";
 import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
-import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Button } from "@/components/ui/Button";
+import { EditorialMedia } from "@/components/ui/EditorialMedia";
+import { AcquisitionProcessExplorer } from "@/components/interactive/AcquisitionProcessExplorer";
 import { generatePageMetadata } from "@/lib/metadata";
-import { FileCheck2, Scale, Compass, Shield, Coins, HardHat, TrendingUp } from "lucide-react";
+import {
+  Compass,
+  FileCheck2,
+  Scale,
+  Shield,
+  Coins,
+  HardHat,
+  TrendingUp,
+  CheckCircle2,
+  AlertCircle,
+  HelpCircle,
+  ArrowRight,
+  ShieldCheck,
+  UserCheck,
+} from "lucide-react";
+import Link from "next/link";
 
 export const metadata = generatePageMetadata({
-  title: "Our Approach",
+  title: "Our Approach — From Discovery to Development",
   description:
-    "Explore Entire UK's disciplined 7-step acquisition, planning and development model for unlocking value in overlooked property assets.",
+    "Explore Entire UK's disciplined 7-stage acquisition, planning and development methodology for unlocking enduring commercial value in UK land and property.",
   path: "/approach",
 });
 
 export default function ApproachPage() {
-  const steps = [
-    {
-      step: "01",
-      title: "Identify",
-      eyebrow: "Sourcing & Intelligence",
-      icon: Compass,
-      headline: "Uncovering overlooked parcels and underutilised assets.",
-      content:
-        "We identify sites through a combination of proprietary geospatial scanning (Land Radar) and established property networks. We search for properties where current use substantially diverges from potential value — such as unallocated edge-of-village pasture, vacant commercial buildings with permitted development rights, or complex title configurations requiring ransom resolution.",
-      deliverables: ["Cadastral boundary review", "Title and covenant inspection", "Spatial constraint check"],
-    },
-    {
-      step: "02",
-      title: "Assess",
-      eyebrow: "Due Diligence & Viability",
-      icon: FileCheck2,
-      headline: "Rigorous planning, technical and commercial evaluation.",
-      content:
-        "Every prospective site undergoes exhaustive multi-disciplinary scrutiny before we commit resource. We evaluate local plan housing land supply, five-year supply deficits, highways access, flood zones (EA River and Surface Water), ecological sensitivities (biodiversity net gain), contamination history, and residual land economics.",
-      deliverables: ["Planning appraisal report", "Highways & services feasibility", "Residual financial model"],
-    },
-    {
-      step: "03",
-      title: "Structure",
-      eyebrow: "Commercial Alignment",
-      icon: Scale,
-      headline: "Tailored deal structures aligned with landowner goals.",
-      content:
-        "There is no one-size-fits-all property transaction. We offer diverse acquisition and partnership mechanisms: unconditional cash purchases for immediate certainty; option agreements with agreed minimum floor prices; planning promotion agreements where Entire UK funds all planning risk in exchange for a performance fee; or joint venture vehicles.",
-      deliverables: ["Option agreements", "Promotion agreements", "Unconditional contracts", "Joint venture SPVs"],
-    },
-    {
-      step: "04",
-      title: "Plan",
-      eyebrow: "Consents & Optimization",
-      icon: Shield,
-      headline: "Navigating planning committees and statutory frameworks.",
-      content:
-        "We assemble top-tier planning consultants, architects, transport engineers, and legal specialists. We engage proactively with local planning authorities (LPAs), statutory consultees, and local communities to craft schemes of genuine architectural merit that maximize density while maintaining strong deliverability.",
-      deliverables: ["Full or outline planning submission", "EIA & ecological mitigation", "S106 / CIL negotiations"],
-    },
-    {
-      step: "05",
-      title: "Fund",
-      eyebrow: "Capital Architecture",
-      icon: Coins,
-      headline: "Structuring institutional capital and development finance.",
-      content:
-        "With consents secured, we deploy appropriate capital structures. We work alongside tier-one UK clearing banks, debt funds, institutional equity partners, and family offices to ensure development debt and equity are optimized for efficient construction cash flow and risk mitigation.",
-      deliverables: ["Senior debt facilities", "Mezzanine & equity structuring", "Project bank accounts & bonds"],
-    },
-    {
-      step: "06",
-      title: "Develop",
-      eyebrow: "Delivery & Construction",
-      icon: HardHat,
-      headline: "Executing construction through vetted contractor partnerships.",
-      content:
-        "We progress projects into physical delivery with comprehensive development management oversight. Working with reputable main contractors on JCT Design and Build contracts, we manage procurement, quality control, programme compliance, and health & safety to British standards.",
-      deliverables: ["JCT building contracts", "Employer's Agent administration", "Quality & ESG monitoring"],
-    },
-    {
-      step: "07",
-      title: "Realise",
-      eyebrow: "Value Crystallisation",
-      icon: TrendingUp,
-      headline: "Disposal, stabilization or institutional handover.",
-      content:
-        "Value is captured through strategic phased sales to owner-occupiers, forward-sales to registered housing providers (RPs), build-to-rent (BTR) bulk sales, or long-term operational retention within the wider Entire built-environment ecosystem.",
-      deliverables: ["Sales and marketing management", "Institutional portfolio handover", "Turnkey completion"],
-    },
-  ];
-
   const transactionStructures = [
     {
-      name: "Unconditional Purchase",
-      idealFor: "Vendors requiring immediate liquidity and execution speed without planning conditionality.",
-      howItWorks: "Entire UK acquires the freehold outright on fixed completion terms, absorbing 100% of the planning and delivery risk directly.",
-    },
-    {
-      name: "Option Agreement",
-      idealFor: "Landowners who want to secure a predetermined price or formula once planning consent is granted.",
-      howItWorks: "Entire UK secures the legal right to purchase the site within an agreed window. We fund and manage the entire planning process at our own cost.",
+      name: "Unconditional Freehold Purchase",
+      idealFor: "Vendors requiring immediate execution certainty and clean capital exit without planning delays.",
+      mechanism:
+        "Entire UK exchanges and completes on fixed contractual terms, absorbing 100% of the planning, environmental, and delivery risk directly onto our balance sheet.",
+      deliverables: "Rapid exchange within 28 days of due diligence; clean cash settlement; no retention hurdles.",
     },
     {
       name: "Planning Promotion Agreement",
-      idealFor: "Strategic acreage where long-term local plan allocation will yield maximum open-market value.",
-      howItWorks: "Entire UK acts as the promotion partner, funding 100% of the planning costs. Once consented, the land is marketed on the open market, sharing the net proceeds.",
+      idealFor: "Landowners with strategic acreage (10 to 100+ acres) seeking to maximise open-market gross value.",
+      mechanism:
+        "Entire UK acts as promotion partner, funding 100% of the technical, architectural, environmental and legal planning costs. Once planning consent is secured, the land is marketed on the open market and net proceeds are shared.",
+      deliverables: "Zero cost or financial risk to landowner; full alignment of interests; competitive open-market tender.",
     },
     {
-      name: "Joint Venture (JV)",
-      idealFor: "Property owners wishing to retain an equity stake and participate directly in the completed scheme's profit.",
-      howItWorks: "A dedicated Special Purpose Vehicle (SPV) is formed. Entire UK provides development management, planning, and funding execution.",
+      name: "Option Agreement",
+      idealFor: "Owners seeking a guaranteed minimum baseline land value combined with planning upside.",
+      mechanism:
+        "Entire UK secures a legally binding option to purchase the site within an agreed planning window at an agreed price formula (or discounted market value), funding all application costs.",
+      deliverables: "Guaranteed minimum price floor; planning costs covered; flexible completion timing.",
+    },
+    {
+      name: "Joint Venture (JV) Partnership",
+      idealFor: "Property owners or institutions wishing to retain equity participation and share in development profit.",
+      mechanism:
+        "A dedicated Special Purpose Vehicle (SPV) is created. The owner contributes the land or built asset while Entire UK provides development management, planning funding, and construction procurement.",
+      deliverables: "Enhanced equity returns; transparent governance; aligned commercial objectives.",
+    },
+  ];
+
+  const epistemicStatuses = [
+    {
+      status: "KNOWN",
+      badgeClass: "bg-emerald-50 text-emerald-700 border-emerald-200",
+      description: "Direct fact established from authoritative statutory origin (e.g. HMLR registered title boundary, adopted public highway extents, EA Zone 3b boundary).",
+    },
+    {
+      status: "DERIVED",
+      badgeClass: "bg-blue-50 text-blue-700 border-blue-200",
+      description: "Deterministic computational output produced by applying auditable spatial logic over source facts (e.g. centroid calculation, boundary overlap percentage).",
+    },
+    {
+      status: "INTERPRETED",
+      badgeClass: "bg-purple-50 text-purple-700 border-purple-200",
+      description: "Attributable human professional evaluation recorded by an experienced property analyst (e.g. planning risk assessment, title covenant interpretation).",
+    },
+    {
+      status: "UNKNOWN",
+      badgeClass: "bg-amber-50 text-amber-700 border-amber-200",
+      description: "Absence of data or unverified record. Governed by the non-negotiable rule: 'Unknown is not clear. Absence of a record does not equal absence of a constraint.'",
+    },
+    {
+      status: "TO BE VERIFIED",
+      badgeClass: "bg-rose-50 text-rose-700 border-rose-200",
+      description: "Identified data contradiction or pending statutory confirmation (e.g. unadopted boundary strip, conflicting planning register notices). Blocks progression.",
     },
   ];
 
   return (
     <div className="pt-24 sm:pt-28">
-      {/* Hero Section */}
+      {/* Editorial Hero */}
       <section className="bg-brand-void text-white py-16 sm:py-24 border-b border-brand-edge-dark">
         <Container>
           <div className="max-w-3xl">
-            <span className="eyebrow eyebrow-dark mb-4">Disciplined Execution</span>
+            <span className="eyebrow eyebrow-dark mb-4">Operational Methodology</span>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extralight tracking-tight text-white mb-6">
-              Our Approach
+              FROM DISCOVERY TO DEVELOPMENT.
             </h1>
             <p className="text-base sm:text-xl font-light text-brand-mist/85 leading-relaxed">
-              We take land and property from initial identification through technical
-              due diligence, planning consent, capital structuring and construction.
-              Here is how we work.
+              We take land and property opportunities from initial spatial identification through rigorous multi-disciplinary due diligence, contractual control, planning consent, capital structuring, construction delivery and asset realisation.
             </p>
           </div>
         </Container>
       </section>
 
-      {/* The 7 Steps Deep Dive */}
-      <Section>
+      {/* Interactive 7-Stage Process Explorer */}
+      <Section className="bg-white">
         <Container>
-          <div className="space-y-16 lg:space-y-24">
-            {steps.map((item, idx) => {
-              const Icon = item.icon;
-              return (
+          <div className="max-w-3xl mb-12 sm:mb-16">
+            <span className="eyebrow">The Complete Lifecycle</span>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extralight tracking-tight text-brand-graphite leading-tight mt-3">
+              The Seven-Stage Acquisition Model
+            </h2>
+            <p className="mt-4 text-base sm:text-lg font-light text-brand-silver leading-relaxed">
+              Click through each stage to inspect the specific data inputs, mandatory evidence hurdles, attributable deliverables, and disciplined rejection grounds that govern our workflow.
+            </p>
+          </div>
+
+          <AcquisitionProcessExplorer />
+        </Container>
+      </Section>
+
+      {/* Editorial Principle: Evidence Before Assumption */}
+      <Section surface={true} id="evidence-before-assumption">
+        <Container>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+            <div className="lg:col-span-6 space-y-6">
+              <span className="eyebrow">Core Epistemic Doctrine</span>
+              <h2 className="text-3xl sm:text-4xl font-extralight text-brand-graphite tracking-tight leading-tight">
+                Evidence Before Assumption: <br />
+                <span className="font-normal text-brand-electric">&ldquo;Unknown is not clear.&rdquo;</span>
+              </h2>
+              <p className="text-base font-light text-brand-silver leading-relaxed">
+                In commercial property acquisition, the most catastrophic mistakes occur when teams confuse the absence of a recorded constraint with confirmation that a site is clear.
+              </p>
+              <p className="text-sm font-light text-brand-silver leading-relaxed">
+                If an environmental database contains no record of land contamination, that does not prove the soil is clean — it merely proves no prior investigation was logged. If Ordnance Survey indicates a road is nearby, that does not prove you hold a legal right to cross the intervening verge.
+              </p>
+              <div className="p-4 rounded-sm bg-white border border-brand-edge text-xs font-light text-brand-graphite space-y-2">
+                <span className="font-medium font-mono text-brand-electric uppercase tracking-wider block">
+                  The Entire UK Truth Rule:
+                </span>
+                <p>
+                  <strong>SOURCE → EVIDENCE → INTERPRETATION → HUMAN ACTION → REAL-WORLD OUTCOME.</strong>
+                  <br />
+                  We never permit: ASSUMPTION → SYSTEM DECISION → PRESENTED AS FACT.
+                </p>
+              </div>
+            </div>
+
+            {/* Epistemic Status Matrix */}
+            <div className="lg:col-span-6 space-y-3">
+              <span className="text-xs font-mono uppercase tracking-widest text-brand-silver block mb-2">
+                Classification of System Knowledge
+              </span>
+              {epistemicStatuses.map((item, idx) => (
                 <div
                   key={idx}
-                  id={`step-${item.step}`}
-                  className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 pt-12 border-t border-brand-edge first:border-t-0 first:pt-0"
+                  className="p-4 rounded-sm bg-white border border-brand-edge space-y-1.5 card-spatial"
                 >
-                  <div className="lg:col-span-4 space-y-3">
-                    <div className="flex items-center gap-3">
-                      <span className="text-3xl font-extralight text-brand-electric font-mono">
-                        {item.step}
-                      </span>
-                      <span className="text-xs font-mono uppercase tracking-widest text-brand-silver">
-                        {item.eyebrow}
-                      </span>
-                    </div>
-                    <h2 className="text-2xl sm:text-3xl font-light text-brand-graphite">
-                      {item.title}
-                    </h2>
+                  <div className="flex items-center justify-between">
+                    <span
+                      className={`text-[11px] font-mono uppercase tracking-wider px-2 py-0.5 rounded border ${item.badgeClass}`}
+                    >
+                      {item.status}
+                    </span>
+                    <span className="text-[10px] font-mono text-brand-silver/50">Status 0{idx + 1}</span>
                   </div>
-
-                  <div className="lg:col-span-8 space-y-6">
-                    <h3 className="text-lg sm:text-xl font-normal text-brand-graphite leading-snug">
-                      {item.headline}
-                    </h3>
-                    <p className="text-sm sm:text-base font-light text-brand-silver leading-relaxed">
-                      {item.content}
-                    </p>
-
-                    <div className="p-4 rounded-sm bg-brand-surface border border-brand-edge">
-                      <span className="text-xs font-mono uppercase tracking-wider text-brand-graphite block mb-2">
-                        Core Outputs &amp; Deliverables
-                      </span>
-                      <div className="flex flex-wrap gap-2">
-                        {item.deliverables.map((d, i) => (
-                          <span
-                            key={i}
-                            className="px-2.5 py-1 rounded-sm bg-white border border-brand-edge text-xs font-light text-brand-graphite"
-                          >
-                            {d}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
+                  <p className="text-xs font-light text-brand-silver leading-relaxed">
+                    {item.description}
+                  </p>
                 </div>
-              );
-            })}
+              ))}
+            </div>
           </div>
         </Container>
       </Section>
 
-      {/* Transaction Structures Breakdown */}
-      <Section surface={true}>
+      {/* Human Judgement in Practice */}
+      <Section className="bg-white">
         <Container>
-          <SectionHeader
-            eyebrow="Commercial Models"
-            title="How We Structure Opportunities"
-            description="We offer commercial flexibility to suit landowners, family estates, corporate property owners and strategic partners."
-          />
+          <EditorialMedia
+            variant="split"
+            primaryImage={{
+              src: "https://images.unsplash.com/photo-1541888946425-d0fbb186156a?auto=format&fit=crop&w=1200&q=80",
+              alt: "Experienced development professionals conducting on-site technical inspection",
+              badge: "On-Site Due Diligence",
+              caption: "Physical ground investigation verifying vehicular sightlines, boundary topography and underground utility services.",
+              aspectRatio: "video",
+            }}
+            title="Why Technology Never Replaces Human Judgement"
+            subtitle="The Limits of Algorithmic Sourcing"
+            description="Our proprietary Land Radar platform provides an exceptional research advantage, screening millions of statutory records in seconds. But an algorithm cannot walk a boundary line, negotiate with a neighbouring landowner to release a ransom strip, or gauge the political sentiment of a local planning committee. Experienced human property professionals lead every single commercial decision."
+          >
+            <div className="space-y-3 pt-3">
+              {[
+                "Highways Engineers verify visibility splays and adopted boundary pegs on site.",
+                "Ecology Specialists perform seasonal Phase 1 habitat walkovers for protected species.",
+                "Planning Counsel review emerging local plan policies and committee precedents.",
+                "Development Directors structure commercial transactions directly with vendors.",
+              ].map((text, i) => (
+                <div key={i} className="flex items-start gap-2.5 text-xs font-light text-brand-graphite">
+                  <CheckCircle2 className="w-4 h-4 text-brand-electric shrink-0 mt-0.5" />
+                  <span>{text}</span>
+                </div>
+              ))}
+            </div>
+          </EditorialMedia>
+        </Container>
+      </Section>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+      {/* Commercial Structuring Mechanisms */}
+      <Section surface={true} id="deal-structures">
+        <Container>
+          <div className="max-w-3xl mb-12 sm:mb-16">
+            <span className="eyebrow">Transaction Mechanics</span>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extralight tracking-tight text-brand-graphite leading-tight mt-3">
+              Tailored Transaction Structures
+            </h2>
+            <p className="mt-4 text-base sm:text-lg font-light text-brand-silver leading-relaxed">
+              Every landowner has distinct financial, tax, and timing requirements. We offer flexible commercial mechanisms designed to align interests and deliver optimal value.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 mb-12">
             {transactionStructures.map((struct, idx) => (
               <div
                 key={idx}
-                className="p-8 rounded-sm bg-white border border-brand-edge space-y-4 flex flex-col justify-between"
+                className="p-8 rounded-sm bg-white border border-brand-edge flex flex-col justify-between h-full card-spatial"
               >
-                <div>
-                  <h3 className="text-xl font-medium text-brand-graphite mb-2">
+                <div className="space-y-3">
+                  <span className="text-xs font-mono uppercase tracking-widest text-brand-electric">
+                    Structure 0{idx + 1}
+                  </span>
+                  <h3 className="text-xl font-medium text-brand-graphite">
                     {struct.name}
                   </h3>
-                  <div className="text-xs text-brand-electric font-medium mb-3">
+                  <div className="p-3 rounded-sm bg-brand-surface border border-brand-edge text-xs font-light text-brand-silver">
+                    <strong className="text-brand-graphite block mb-1">Ideal For:</strong>
                     {struct.idealFor}
                   </div>
-                  <p className="text-sm font-light text-brand-silver leading-relaxed">
-                    {struct.howItWorks}
+                  <p className="text-xs font-light text-brand-silver leading-relaxed pt-1">
+                    {struct.mechanism}
                   </p>
                 </div>
-                <div className="pt-4 border-t border-brand-edge/60">
-                  <span className="text-[11px] font-mono uppercase tracking-widest text-brand-silver">
-                    Entire UK Model 0{idx + 1}
-                  </span>
+
+                <div className="pt-4 border-t border-brand-edge text-[11px] font-mono text-brand-graphite">
+                  <span className="text-brand-silver block font-sans">Deliverables:</span>
+                  {struct.deliverables}
                 </div>
               </div>
             ))}
           </div>
 
-          <div className="mt-12 p-8 rounded-sm bg-brand-void text-white flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+          {/* Direct CTA */}
+          <div className="p-8 rounded-sm bg-brand-void text-white border border-brand-edge-dark flex flex-col sm:flex-row items-center justify-between gap-6">
             <div>
-              <h4 className="text-lg font-light text-white mb-1">
-                Have a site you would like us to evaluate?
+              <h4 className="text-xl font-light text-white">
+                Discuss an Acquisition Structure With Our Team
               </h4>
-              <p className="text-xs font-light text-brand-mist/70">
-                We review submissions within 3 working days with complete commercial discretion.
+              <p className="text-xs font-light text-brand-mist/75 mt-1">
+                We review sites confidentially and structure terms aligned with your objectives.
               </p>
             </div>
             <Button href="/submit" variant="primary" size="md" showArrow>
-              Submit an Opportunity
+              Submit a Site
             </Button>
           </div>
         </Container>

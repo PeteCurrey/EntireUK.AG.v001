@@ -101,17 +101,17 @@ export function Hero() {
 
             {/* Entrance Sequence: Headline with Mask Reveal */}
             <div className="animate-hero-headline overflow-hidden">
-              <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extralight tracking-tight leading-[1.08] text-white">
-                We find the opportunities <br className="hidden sm:inline" />
-                <span className="font-normal text-white">others overlook.</span>
+              <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extralight tracking-tight leading-[1.05] text-white">
+                LAND WITH POTENTIAL. <br className="hidden sm:inline" />
+                <span className="font-normal text-white">DEVELOPMENT WITH PURPOSE.</span>
               </h1>
             </div>
 
             {/* Entrance Sequence: Supporting Text */}
             <div className="animate-hero-copy">
               <p className="text-lg sm:text-xl font-light text-brand-mist/85 max-w-2xl leading-relaxed">
-                Entire UK identifies land and property with development potential,
-                combining proprietary Land Radar spatial intelligence, planning analytics, and experienced human due diligence to unlock lasting commercial value.
+                Entire UK identifies, assesses, secures and develops property and land opportunities across the UK.
+                We combine proprietary Land Radar spatial intelligence with rigorous human due diligence to unlock lasting commercial value.
               </p>
             </div>
 
@@ -121,7 +121,7 @@ export function Hero() {
                 Submit an Opportunity
               </Button>
               <Button href="/approach" variant="ghost" size="lg">
-                Our 7-Step Model
+                How We Work
               </Button>
               <Link
                 href="/dashboard"
