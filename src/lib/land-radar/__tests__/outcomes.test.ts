@@ -74,9 +74,17 @@ describe('Candidate Outcome Lifecycle Service (Phase 9 Section 16)', () => {
           rationale: 'Attempting illegal jump.',
         }),
       (err: Error) => {
-        assert.ok(err.message.includes('Invalid lifecycle transition'));
-        assert.ok(err.message.includes('SURFACED'));
-        assert.ok(err.message.includes('ACQUIRED'));
+        // DEF-013-01: recordOutcome now verifies against actual DB state.
+        // With no prior outcomes for site-003, ACQUIRED is not a valid first state.
+        // With prior outcomes at SURFACED, ACQUIRED would be an invalid transition.
+        // Both cases correctly reject the request — just with different messages.
+        const isTransitionError = err.message.includes('Invalid lifecycle transition');
+        const isInitError = err.message.includes('Cannot initialise lifecycle at state') &&
+          err.message.includes('ACQUIRED');
+        assert.ok(
+          isTransitionError || isInitError,
+          `Expected a lifecycle rejection error but got: ${err.message}`
+        );
         return true;
       }
     );
@@ -121,6 +129,11 @@ describe('Candidate Outcome Lifecycle Service (Phase 9 Section 16)', () => {
   });
 
   it('records a rejection branch with evidence snapshot', async () => {
+    // Progress site-004 to ANALYST_REVIEW first to maintain strict lifecycle sequence
+    await recordOutcome({ site_id: 'site-004', state: 'SURFACED', recorded_by: 'System', rationale: 'Surfaced' });
+    await recordOutcome({ site_id: 'site-004', state: 'SCREENED', previous_state: 'SURFACED', recorded_by: 'System', rationale: 'Screened' });
+    await recordOutcome({ site_id: 'site-004', state: 'ANALYST_REVIEW', previous_state: 'SCREENED', recorded_by: 'System', rationale: 'Review' });
+
     const snapshot = {
       market_strength: 'INSUFFICIENT_MARKET_EVIDENCE',
       planning_refusals: 2,

@@ -106,15 +106,42 @@ export interface RecordOutcomeInput {
 }
 
 export async function recordOutcome(input: RecordOutcomeInput): Promise<CandidateOutcome> {
-  if (input.previous_state && !isValidTransition(input.previous_state, input.state)) {
-    throw new Error(
-      `Invalid lifecycle transition: ${input.previous_state} → ${input.state}. ` +
-        `Valid from ${input.previous_state}: [${VALID_TRANSITIONS[input.previous_state].join(', ')}]`
-    );
+  // DEF-013-01 FIX: Always verify the transition against the ACTUAL current database
+  // state, never the caller-supplied previous_state. This prevents lifecycle jump
+  // spoofing via direct server action invocation with a forged current_state.
+  const actualCurrentState = await getCurrentOutcomeState(input.site_id);
+  const effectivePreviousState = actualCurrentState ?? null;
+
+  if (effectivePreviousState !== null) {
+    // Site already has lifecycle history — validate from the real current state
+    if (!isValidTransition(effectivePreviousState, input.state)) {
+      throw new Error(
+        `Invalid lifecycle transition: ${effectivePreviousState} → ${input.state}. ` +
+          `Valid from ${effectivePreviousState}: [${VALID_TRANSITIONS[effectivePreviousState].join(', ')}]`
+      );
+    }
+    // Detect caller spoofing: if caller claims a different previous_state, refuse
+    if (input.previous_state && input.previous_state !== effectivePreviousState) {
+      throw new Error(
+        `Lifecycle state mismatch: caller reported previous_state="${input.previous_state}" ` +
+          `but actual current state is "${effectivePreviousState}". Transition rejected.`
+      );
+    }
+  } else {
+    // No prior outcomes — only transitions FROM SURFACED are valid first moves
+    const validFirstTargets = VALID_TRANSITIONS['SURFACED'];
+    if (input.state !== 'SURFACED' && !validFirstTargets.includes(input.state)) {
+      throw new Error(
+        `Cannot initialise lifecycle at state "${input.state}". ` +
+          `Valid first states: [${validFirstTargets.join(', ')}]`
+      );
+    }
   }
 
   const mode = getPersistenceMode();
   const now = new Date().toISOString();
+  // Store the server-verified previous state in the audit record
+  const verifiedPreviousState = effectivePreviousState;
 
   if (mode === 'supabase') {
     const db = getLandRadarDb();
@@ -123,7 +150,7 @@ export async function recordOutcome(input: RecordOutcomeInput): Promise<Candidat
       .insert({
         site_id: input.site_id,
         state: input.state,
-        previous_state: input.previous_state ?? null,
+        previous_state: verifiedPreviousState,
         recorded_by: input.recorded_by,
         rationale: input.rationale,
         evidence_snapshot: input.evidence_snapshot ?? null,
@@ -145,7 +172,7 @@ export async function recordOutcome(input: RecordOutcomeInput): Promise<Candidat
     id,
     site_id: input.site_id,
     state: input.state,
-    previous_state: input.previous_state ?? null,
+    previous_state: verifiedPreviousState,
     recorded_by: input.recorded_by,
     rationale: input.rationale,
     evidence_snapshot: input.evidence_snapshot ?? null,

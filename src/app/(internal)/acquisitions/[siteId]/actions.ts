@@ -8,6 +8,20 @@ import {
 import { recordOutcome } from "@/lib/land-radar/outcomeService";
 import { verifyHmlrTitleOnline } from "@/lib/land-radar/ownership/ownershipService";
 import { ContactOutcomeCode, AcquisitionOutcomeState } from "@/lib/land-radar/types";
+import { getCurrentUser } from "@/lib/auth/session";
+
+/**
+ * DEF-013-01 guard — call at the top of every mutation action.
+ * Returns the authenticated user's email for use as the audit `recorded_by` value.
+ * Throws if no valid session exists, blocking the action entirely.
+ */
+async function requireAuthenticatedAnalyst(): Promise<string> {
+  const user = await getCurrentUser();
+  if (!user) {
+    throw new Error("Unauthorised: a valid analyst session is required to perform this action.");
+  }
+  return user.email;
+}
 
 export interface RecordContactServerInput {
   site_id: string;
@@ -26,6 +40,7 @@ export interface RecordContactServerInput {
 
 export async function recordContactAction(input: RecordContactServerInput) {
   try {
+    const analystEmail = await requireAuthenticatedAnalyst();
     const record = await recordContactAttempt({
       site_id: input.site_id,
       site_reference: input.site_reference,
@@ -37,7 +52,7 @@ export async function recordContactAction(input: RecordContactServerInput) {
       availability_information: input.availability_information,
       next_action: input.next_action,
       follow_up_date: input.follow_up_date,
-      analyst: input.analyst || "analyst@entire-uk.com",
+      analyst: analystEmail,
       notes: input.notes,
     });
 
@@ -62,6 +77,8 @@ export interface ResolveContradictionServerInput {
 
 export async function resolveContradictionAction(input: ResolveContradictionServerInput) {
   try {
+    const analystEmail = await requireAuthenticatedAnalyst();
+
     if (!input.resolution_rationale || input.resolution_rationale.trim().length < 5) {
       return { success: false, error: "A detailed resolution rationale is required." };
     }
@@ -74,7 +91,7 @@ export async function resolveContradictionAction(input: ResolveContradictionServ
       resolution_status: input.resolution_status,
       resolution_rationale: input.resolution_rationale,
       supporting_evidence_ref: input.supporting_evidence_ref,
-      resolved_by: input.resolved_by || "analyst@entire-uk.com",
+      resolved_by: analystEmail,
     });
 
     revalidatePath(`/acquisitions/${input.site_id}`);
@@ -96,16 +113,21 @@ export interface TransitionLifecycleServerInput {
 
 export async function transitionLifecycleAction(input: TransitionLifecycleServerInput) {
   try {
+    const analystEmail = await requireAuthenticatedAnalyst();
+
     if (!input.rationale || input.rationale.trim().length < 5) {
       return { success: false, error: "Lifecycle transition rationale is required." };
     }
 
+    // Note: previous_state is passed to recordOutcome but is validated server-side
+    // against the actual DB state. The client-supplied current_state is cross-checked
+    // and will cause an error if it does not match the real current state.
     const outcome = await recordOutcome({
       site_id: input.site_id,
       previous_state: input.current_state,
       state: input.next_state,
       rationale: input.rationale,
-      recorded_by: input.recorded_by || "analyst@entire-uk.com",
+      recorded_by: analystEmail,
     });
 
     revalidatePath(`/acquisitions/${input.site_id}`);
@@ -123,11 +145,13 @@ export async function verifyTitleOnlineAction(input: {
   recorded_by: string;
 }) {
   try {
+    const analystEmail = await requireAuthenticatedAnalyst();
+
     const res = await verifyHmlrTitleOnline({
       site_id: input.site_id,
       site_reference: input.site_reference,
       title_reference: input.title_reference,
-      recorded_by: input.recorded_by || "analyst@entire-uk.com",
+      recorded_by: analystEmail,
     });
 
     revalidatePath(`/acquisitions/${input.site_id}`);

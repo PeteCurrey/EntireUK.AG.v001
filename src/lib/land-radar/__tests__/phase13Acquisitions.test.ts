@@ -258,7 +258,10 @@ describe('Phase 13: Acquisition Operations Workbench & Opportunity Execution', (
         site: mockSite,
         lifecycleStage: 'CONTACTED',
         ownershipSummary: summary,
-        signals: [{ site_id: mockSite.id, signal_type: 'planning_activity', status: 'known', value: 1, explanation: 'Planning confirmed' }],
+        signals: [
+          { site_id: mockSite.id, signal_type: 'planning_activity', status: 'known', value: 1, explanation: 'Planning confirmed' },
+          { site_id: mockSite.id, signal_type: 'market_signal', status: 'known', value: 1, explanation: 'Comparable transactions identified' },
+        ],
         contradictions: emptyContradictions,
         contactHistory: contacts,
       });
@@ -279,6 +282,94 @@ describe('Phase 13: Acquisition Operations Workbench & Opportunity Execution', (
 
       assert.equal(action.code, 'REVIEW_REJECTION');
       assert.equal(action.blocked_by, 'Terminal rejection state');
+    });
+
+    it('returns PLACE_ON_HOLD when candidate is INVESTIGATING with active constraint hold (DEF-013-03)', () => {
+      const summary = createMockOwnership({
+        ownership_evidence_records: [{ evidence_status: 'VERIFIED' } as any],
+        title_relationships: [{ relationship_strength: 'STRONG', title_reference: 'WK29101' } as any],
+        ownership_evidence_status: 'VERIFIED',
+        availability_state: 'AVAILABLE',
+      });
+
+      const action = evaluateDeterministicNextAction({
+        site: mockSite,
+        lifecycleStage: 'INVESTIGATING',
+        ownershipSummary: summary,
+        signals: [
+          { site_id: mockSite.id, signal_type: 'planning_activity', status: 'known', value: 1, explanation: 'Planning confirmed' },
+          { site_id: mockSite.id, signal_type: 'constraint_signal', status: 'known', value: 0, explanation: 'Severe contamination ground hold' },
+        ],
+        contradictions: emptyContradictions,
+      });
+
+      assert.equal(action.code, 'PLACE_ON_HOLD');
+      assert.match(action.rationale, /Active commercial hold condition prevents progression/);
+      assert.match(action.trigger_evidence, /Severe contamination ground hold/);
+    });
+
+    it('returns REVIEW_LOCAL_PLAN when brownfield candidate has unknown planning/allocation (DEF-013-03)', () => {
+      const summary = createMockOwnership({
+        ownership_evidence_records: [{ evidence_status: 'VERIFIED' } as any],
+        title_relationships: [{ relationship_strength: 'STRONG', title_reference: 'WK29101' } as any],
+        ownership_evidence_status: 'VERIFIED',
+        availability_state: 'AVAILABLE',
+      });
+
+      const action = evaluateDeterministicNextAction({
+        site: mockSite,
+        lifecycleStage: 'INVESTIGATING',
+        ownershipSummary: summary,
+        signals: [
+          { site_id: mockSite.id, signal_type: 'brownfield_signal', status: 'known', value: 1, explanation: 'Previously developed land' },
+        ],
+        contradictions: emptyContradictions,
+      });
+
+      assert.equal(action.code, 'REVIEW_LOCAL_PLAN');
+      assert.match(action.rationale, /previously developed land/);
+    });
+
+    it('returns OBTAIN_MARKET_EVIDENCE when planning and availability are addressed but comps are absent (DEF-013-03)', () => {
+      const summary = createMockOwnership({
+        ownership_evidence_records: [{ evidence_status: 'VERIFIED' } as any],
+        title_relationships: [{ relationship_strength: 'STRONG', title_reference: 'WK29101' } as any],
+        ownership_evidence_status: 'VERIFIED',
+        availability_state: 'AVAILABLE',
+      });
+
+      const action = evaluateDeterministicNextAction({
+        site: mockSite,
+        lifecycleStage: 'INVESTIGATING',
+        ownershipSummary: summary,
+        signals: [
+          { site_id: mockSite.id, signal_type: 'planning_activity', status: 'known', value: 1, explanation: 'Planning assessed' },
+        ],
+        contradictions: emptyContradictions,
+        contactHistory: [
+          {
+            id: 'contact-done',
+            site_id: mockSite.id,
+            site_reference: mockSite.internal_reference,
+            contact_type: 'phone',
+            organisation_or_role: 'Agent',
+            source_of_contact_details: 'Marketing brochure',
+            contact_date: '2026-09-20',
+            communication_method_notes: null,
+            outcome: 'OPEN_TO_DISCUSSION',
+            availability_information: 'Vendor willing to discuss terms',
+            next_action: 'Prepare appraisal',
+            follow_up_date: null,
+            follow_up_status: 'completed',
+            analyst: 'Sarah Jenkins',
+            notes: 'Agent confirmed marketing underway',
+            created_at: new Date().toISOString(),
+          },
+        ],
+      });
+
+      assert.equal(action.code, 'OBTAIN_MARKET_EVIDENCE');
+      assert.match(action.rationale, /no market comparable evidence on record/);
     });
   });
 
@@ -428,7 +519,10 @@ describe('Phase 13: Acquisition Operations Workbench & Opportunity Execution', (
             rationale: 'Attempting invalid jump',
           });
         },
-        /Invalid lifecycle transition/
+        // DEF-013-01: The guard now verifies against actual DB state.
+        // If no prior outcomes exist, 'ACQUIRED' is not a valid first state.
+        // If a prior outcome exists at SURFACED, 'ACQUIRED' is an invalid transition.
+        /Invalid lifecycle transition|Cannot initialise lifecycle at state/
       );
     });
 
@@ -438,6 +532,40 @@ describe('Phase 13: Acquisition Operations Workbench & Opportunity Execution', (
       assert.equal(isRejectionState('REJECTED_TITLE'), true);
       assert.equal(isTerminalState('REJECTED_ACCESS'), true);
       assert.equal(isTerminalState('INVESTIGATING'), false);
+    });
+
+    it('detects and rejects caller previous_state spoofing against actual DB state (DEF-013-01)', async () => {
+      const spoofSiteId = 'site-spoof-001';
+      // Initialise at SURFACED
+      await recordOutcome({
+        site_id: spoofSiteId,
+        state: 'SURFACED',
+        recorded_by: 'system',
+        rationale: 'Surfaced',
+      });
+
+      // Advance to SCREENED
+      await recordOutcome({
+        site_id: spoofSiteId,
+        state: 'SCREENED',
+        previous_state: 'SURFACED',
+        recorded_by: 'analyst@entire-uk.com',
+        rationale: 'Screened',
+      });
+
+      // Now attempt transition claiming previous_state was INVESTIGATING (spoofing forward)
+      await assert.rejects(
+        async () => {
+          await recordOutcome({
+            site_id: spoofSiteId,
+            state: 'CONTACTED',
+            previous_state: 'INVESTIGATING', // Falsified: actual DB state is SCREENED
+            recorded_by: 'attacker',
+            rationale: 'Attempting spoofed jump',
+          });
+        },
+        /Lifecycle state mismatch|Invalid lifecycle transition/
+      );
     });
   });
 });

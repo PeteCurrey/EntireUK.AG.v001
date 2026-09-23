@@ -179,7 +179,28 @@ export function evaluateDeterministicNextAction(
   // 5. Planning & Local Policy Foundation
   // -------------------------------------------------------------------------
   const planSignal = signals.find((s) => s.signal_type === 'planning_activity');
+  const brownfieldSignal = signals.find((s) => s.signal_type === 'brownfield_signal');
+  const isPdl = brownfieldSignal && brownfieldSignal.status === 'known' && Number(brownfieldSignal.value) > 0;
+
   if (!planSignal || planSignal.status === 'unknown') {
+    // DEF-013-03 FIX: REVIEW_LOCAL_PLAN was declared but never emitted.
+    // For brownfield / previously developed land, emit the more specific action.
+    if (isPdl) {
+      return {
+        code: 'REVIEW_LOCAL_PLAN',
+        label: 'Review Local Plan & SHLAA Allocation',
+        category: 'planning',
+        priority: 'medium',
+        rationale:
+          `Site is previously developed land (brownfield_signal confirmed) but Local Plan ` +
+          `allocation and planning history are unknown. Emerging policy status, SHLAA ` +
+          `call-for-sites and any allocations in the Local Development Scheme must be ` +
+          `confirmed before commercial gate.`,
+        trigger_evidence: `brownfield_signal = ${brownfieldSignal!.value}; planning_activity = ${planSignal?.status ?? 'absent'}`,
+        blocked_by: null,
+        prerequisites_met: true,
+      };
+    }
     return {
       code: 'REVIEW_PLANNING_HISTORY',
       label: 'Review LPA Planning History & SHLAA',
@@ -190,6 +211,36 @@ export function evaluateDeterministicNextAction(
       blocked_by: null,
       prerequisites_met: true,
     };
+  }
+
+  // -------------------------------------------------------------------------
+  // 5b. Commercial Hold — must be evaluated before the contact/availability
+  //     workflow so that a held candidate is not incorrectly asked to make
+  //     contact or investigate availability when the site is deliberately paused.
+  //     DEF-013-03 FIX: PLACE_ON_HOLD was declared but never emitted.
+  //     Uses 'constraint_signal' (the existing SignalType) to detect hold conditions.
+  // -------------------------------------------------------------------------
+  if (lifecycleStage === 'INVESTIGATING') {
+    const constraintSignal = signals.find((s) => s.signal_type === 'constraint_signal');
+    const hasActiveHoldReason =
+      constraintSignal && constraintSignal.status === 'known' && Number(constraintSignal.value) < 1;
+
+    if (hasActiveHoldReason) {
+      const holdDetail = constraintSignal!.explanation || constraintSignal!.value_text || constraintSignal!.status;
+      return {
+        code: 'PLACE_ON_HOLD',
+        label: 'Place Candidate on Commercial Hold',
+        category: 'lifecycle',
+        priority: 'medium',
+        rationale:
+          `Active commercial hold condition prevents progression. Site is INVESTIGATING but ` +
+          `a material constraint has been identified that requires third-party resolution ` +
+          `before acquisition discussions can continue: constraint_signal = ${holdDetail}.`,
+        trigger_evidence: `Lifecycle = INVESTIGATING; constraint_signal: ${holdDetail}`,
+        blocked_by: 'Active constraint hold condition (contamination, infrastructure or ransom)',
+        prerequisites_met: true,
+      };
+    }
   }
 
   // -------------------------------------------------------------------------
@@ -271,6 +322,30 @@ export function evaluateDeterministicNextAction(
         };
       }
     }
+  }
+
+  // -------------------------------------------------------------------------
+  // 6b. Market Evidence Gap (Requires Cadastral & Contact/Availability Foundation)
+  //     DEF-013-03 FIX: OBTAIN_MARKET_EVIDENCE was declared but never emitted.
+  //     Uses 'market_signal' (the existing SignalType). Planning is confirmed
+  //     assessed and availability is addressed. Fires before commercial gate
+  //     when market comparable evidence is absent.
+  // -------------------------------------------------------------------------
+  const marketSignal = signals.find((s) => s.signal_type === 'market_signal');
+  if (!marketSignal || marketSignal.status === 'unknown') {
+    return {
+      code: 'OBTAIN_MARKET_EVIDENCE',
+      label: 'Source Market Comparable Evidence',
+      category: 'availability',
+      priority: 'medium',
+      rationale:
+        `Planning history assessed but no market comparable evidence on record. ` +
+        `Land value context requires comparable transactions or listed pricing ` +
+        `before a commercial gate decision can be grounded in evidence.`,
+      trigger_evidence: `planning_activity = ${planSignal.status}; market_signal = ${marketSignal?.status ?? 'absent'}`,
+      blocked_by: null,
+      prerequisites_met: true,
+    };
   }
 
   // -------------------------------------------------------------------------
