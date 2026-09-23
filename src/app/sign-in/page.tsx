@@ -4,7 +4,7 @@ import React, { useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { BrandLogo, BrandMark } from "@/components/ui/BrandMark";
-import { Lock, ArrowRight, ShieldCheck, AlertCircle, CheckCircle2 } from "lucide-react";
+import { Lock, ArrowRight, ArrowLeft, ShieldCheck, AlertCircle, CheckCircle2 } from "lucide-react";
 
 function SignInForm() {
   const searchParams = useSearchParams();
@@ -54,11 +54,22 @@ function SignInForm() {
 
   return (
     <div className="w-full max-w-md mx-auto px-6 py-10 sm:py-16">
+      {/* Go Back */}
+      <div className="mb-8">
+        <Link
+          href="/"
+          className="inline-flex items-center gap-1.5 text-xs text-brand-silver hover:text-brand-graphite font-medium transition-colors group"
+        >
+          <ArrowLeft className="w-3.5 h-3.5 transition-transform group-hover:-translate-x-0.5" />
+          Go Back
+        </Link>
+      </div>
+
       {/* Brand Header */}
       <div className="mb-10">
-        <Link href="/" className="inline-block mb-8 group" aria-label="Return to Entire UK Homepage">
+        <div className="inline-block mb-8" aria-label="Entire UK">
           <BrandLogo onDark={false} />
-        </Link>
+        </div>
         <div className="flex items-center gap-2 mb-2">
           <span className="w-1.5 h-1.5 rounded-full bg-brand-electric" />
           <span className="text-[11px] uppercase tracking-widest font-mono text-brand-silver font-medium">
@@ -237,9 +248,7 @@ function SignInForm() {
         </div>
         <div className="flex items-center justify-between text-[11px] text-brand-silver/70 font-light pt-2">
           <span>Entire UK Development Limited</span>
-          <Link href="/" className="hover:text-brand-graphite underline underline-offset-2 transition-colors">
-            Return to public site
-          </Link>
+          <span>© {new Date().getFullYear()}</span>
         </div>
       </div>
     </div>
