@@ -2,6 +2,8 @@ import React from "react";
 import { Container } from "@/components/ui/Container";
 import { generatePageMetadata } from "@/lib/metadata";
 
+import { PageHero } from "@/components/ui/PageHero";
+
 export const metadata = generatePageMetadata({
   title: "Terms of Use",
   description: "Terms of website use, regulatory disclaimers, and opportunity submission conditions for Entire UK.",
@@ -10,17 +12,18 @@ export const metadata = generatePageMetadata({
 
 export default function TermsPage() {
   return (
-    <div className="py-20 sm:py-28 bg-white min-h-[70vh]">
-      <Container size="narrow">
-        <div className="space-y-4 mb-12">
-          <div className="eyebrow">Legal &amp; Compliance</div>
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extralight text-brand-graphite tracking-tight">
-            Terms of Website Use
-          </h1>
-          <p className="text-sm font-light text-brand-silver">
-            Last updated: September 2026
-          </p>
-        </div>
+    <div className="bg-white min-h-screen pb-24">
+      <PageHero
+        eyebrow="Legal & Governance"
+        badge="Regulatory Framework"
+        title="TERMS OF"
+        subtitle="WEBSITE USE."
+        description="Statutory legal disclaimers, intellectual property governance, and opportunity submission conditions for Entire UK."
+        imageSrc="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1920&q=80"
+        imageAlt="Entire UK legal and corporate governance"
+        containerSize="narrow"
+      />
+      <Container size="narrow" className="py-16 sm:py-20">
 
         <div className="prose prose-slate max-w-none font-light text-brand-silver space-y-8 leading-relaxed">
           <section className="space-y-3">

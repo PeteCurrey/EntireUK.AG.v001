@@ -2,6 +2,7 @@ import React from "react";
 import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
 import { Button } from "@/components/ui/Button";
+import { PageHero } from "@/components/ui/PageHero";
 import { EditorialMedia } from "@/components/ui/EditorialMedia";
 import { generatePageMetadata } from "@/lib/metadata";
 import {
@@ -88,21 +89,26 @@ export default function AboutPage() {
   ];
 
   return (
-    <div className="pt-24 sm:pt-28">
-      {/* Editorial Hero */}
-      <section className="bg-brand-void text-white py-16 sm:py-24 border-b border-brand-edge-dark">
-        <Container>
-          <div className="max-w-3xl">
-            <span className="eyebrow eyebrow-dark mb-4">About Entire UK</span>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extralight tracking-tight text-white mb-6">
-              BUILT AROUND THE LAND.
-            </h1>
-            <p className="text-base sm:text-xl font-light text-brand-mist/85 leading-relaxed">
-              Entire UK is a dedicated land acquisition and property development company. We identify, assess, secure, and deliver development opportunities across England, Scotland, and Wales.
-            </p>
-          </div>
-        </Container>
-      </section>
+    <div>
+      {/* Full-Screen Editorial Hero */}
+      <PageHero
+        eyebrow="Company Purpose"
+        badge="Ecosystem Principal"
+        title="BUILT AROUND"
+        subtitle="THE LAND."
+        description="Entire UK is a dedicated land acquisition and property development company. We identify, assess, secure, and deliver development opportunities across England, Scotland, and Wales."
+        imageSrc="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1920&q=80"
+        imageAlt="Modern sustainable built environment architectural perspective in the UK"
+      >
+        <div className="flex flex-wrap items-center gap-4">
+          <Button href="/submit" variant="primary" size="lg" showArrow>
+            Submit an Opportunity
+          </Button>
+          <Button href="#principles" variant="ghost" size="lg">
+            Our Principles
+          </Button>
+        </div>
+      </PageHero>
 
       {/* Why Entire UK Exists */}
       <Section className="bg-white">

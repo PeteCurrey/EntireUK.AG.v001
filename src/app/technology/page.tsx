@@ -2,7 +2,7 @@ import React from "react";
 import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
 import { Button } from "@/components/ui/Button";
-import { EditorialMedia } from "@/components/ui/EditorialMedia";
+import { PageHero } from "@/components/ui/PageHero";
 import { EpistemicDiagram } from "@/components/interactive/EpistemicDiagram";
 import { generatePageMetadata } from "@/lib/metadata";
 import {
@@ -69,21 +69,26 @@ export default function TechnologyPage() {
   ];
 
   return (
-    <div className="pt-24 sm:pt-28">
-      {/* Editorial Hero */}
-      <section className="bg-brand-void text-white py-16 sm:py-24 border-b border-brand-edge-dark">
-        <Container>
-          <div className="max-w-3xl">
-            <span className="eyebrow eyebrow-dark mb-4">Proprietary Technology</span>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extralight tracking-tight text-white mb-6">
-              INTELLIGENCE BEHIND THE ACQUISITION.
-            </h1>
-            <p className="text-base sm:text-xl font-light text-brand-mist/85 leading-relaxed">
-              Land Radar is our proprietary internal acquisition intelligence platform. It gives Entire UK a decisive research advantage across UK land and property by combining spatial GIS, planning precedents, cadastral ownership and environmental data into an auditable research workflow.
-            </p>
-          </div>
-        </Container>
-      </section>
+    <div>
+      {/* Full-Screen Editorial Hero */}
+      <PageHero
+        eyebrow="Proprietary Technology"
+        badge="Internal Acquisition Infrastructure"
+        title="INTELLIGENCE BEHIND"
+        subtitle="THE ACQUISITION."
+        description="Land Radar is our proprietary internal acquisition intelligence platform. It gives Entire UK a decisive research advantage across UK land and property by combining spatial GIS, planning precedents, cadastral ownership and environmental data into an auditable research workflow."
+        imageSrc="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1920&q=80"
+        imageAlt="Advanced geospatial and technology network visualisation of UK property intelligence"
+      >
+        <div className="flex flex-wrap items-center gap-4">
+          <Button href="/submit" variant="primary" size="lg" showArrow>
+            Submit an Opportunity
+          </Button>
+          <Button href="#epistemic-architecture" variant="ghost" size="lg">
+            Epistemic Architecture
+          </Button>
+        </div>
+      </PageHero>
 
       {/* Philosophy Banner: Not a SaaS Vendor */}
       <Section surface={true} className="border-b border-brand-edge">

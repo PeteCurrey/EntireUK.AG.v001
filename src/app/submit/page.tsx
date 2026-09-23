@@ -1,4 +1,4 @@
-import React from "react";
+import { PageHero } from "@/components/ui/PageHero";
 import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
 import { generatePageMetadata } from "@/lib/metadata";
@@ -53,22 +53,22 @@ export default function SubmitGatewayPage() {
   ];
 
   return (
-    <div className="pt-24 sm:pt-28">
-      {/* Header */}
-      <section className="bg-brand-void text-white py-16 sm:py-24 border-b border-brand-edge-dark">
-        <Container>
-          <div className="max-w-3xl">
-            <span className="eyebrow eyebrow-dark mb-4">Opportunity Intake Gateway</span>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extralight tracking-tight text-white mb-6">
-              Have you found an opportunity?
-            </h1>
-            <p className="text-base sm:text-xl font-light text-brand-mist/85 leading-relaxed">
-              Whether you own the land, own the property or know of a site with development potential,
-              tell us what you know. We&apos;ll review the information against our acquisition criteria.
-            </p>
-          </div>
-        </Container>
-      </section>
+    <div>
+      {/* Full-Screen Editorial Hero */}
+      <PageHero
+        eyebrow="Opportunity Intake Gateway"
+        badge="Confidential Review"
+        title="HAVE YOU FOUND AN"
+        subtitle="OPPORTUNITY?"
+        description="Whether you own the land, own the property or know of a site with development potential, tell us what you know. We review every submission against our acquisition criteria."
+        imageSrc="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1920&q=80"
+        imageAlt="UK aerial land parcels and strategic opportunity screening"
+      >
+        <div className="flex items-center gap-3 text-xs font-mono text-brand-mist/70">
+          <span>Choose your intake pathway below</span>
+          <ArrowRight className="w-3.5 h-3.5 text-brand-electric" />
+        </div>
+      </PageHero>
 
       {/* Gateway Selection Grid */}
       <Section surface={true}>

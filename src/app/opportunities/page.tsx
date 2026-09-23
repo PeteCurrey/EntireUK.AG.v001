@@ -2,7 +2,7 @@ import React from "react";
 import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
 import { Button } from "@/components/ui/Button";
-import { EditorialMedia } from "@/components/ui/EditorialMedia";
+import { PageHero } from "@/components/ui/PageHero";
 import { OpportunityAnatomy } from "@/components/interactive/OpportunityAnatomy";
 import { generatePageMetadata } from "@/lib/metadata";
 import {
@@ -102,21 +102,26 @@ export default function OpportunitiesPage() {
   ];
 
   return (
-    <div className="pt-24 sm:pt-28">
-      {/* Editorial Hero */}
-      <section className="bg-brand-void text-white py-16 sm:py-24 border-b border-brand-edge-dark">
-        <Container>
-          <div className="max-w-3xl">
-            <span className="eyebrow eyebrow-dark mb-4">Acquisition Typologies &amp; Pipeline</span>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extralight tracking-tight text-white mb-6">
-              OPPORTUNITIES WITH DEVELOPMENT POTENTIAL.
-            </h1>
-            <p className="text-base sm:text-xl font-light text-brand-mist/85 leading-relaxed">
-              Entire UK is not a consumer property portal or estate agent. We are active principal buyers, promoters, and developers. Here is how we define, investigate, and progress opportunities.
-            </p>
-          </div>
-        </Container>
-      </section>
+    <div>
+      {/* Full-Screen Editorial Hero */}
+      <PageHero
+        eyebrow="Pipeline & Typologies"
+        badge="Off-Market Portfolio"
+        title="OPPORTUNITIES WITH"
+        subtitle="DEVELOPMENT POTENTIAL."
+        description="Entire UK is not a consumer property portal or estate agent. We are active principal buyers, promoters, and developers. Here is how we define, investigate, and progress opportunities across the UK."
+        imageSrc="https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1920&q=80"
+        imageAlt="Aerial panorama of UK strategic land parcels and edge-of-settlement development opportunities"
+      >
+        <div className="flex flex-wrap items-center gap-4">
+          <Button href="/submit" variant="primary" size="lg" showArrow>
+            Submit an Opportunity
+          </Button>
+          <Button href="#site-anatomy" variant="ghost" size="lg">
+            Inspect Site Anatomy
+          </Button>
+        </div>
+      </PageHero>
 
       {/* Editorial Philosophy Statement */}
       <Section surface={true} className="border-b border-brand-edge">

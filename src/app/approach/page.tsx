@@ -2,6 +2,7 @@ import React from "react";
 import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
 import { Button } from "@/components/ui/Button";
+import { PageHero } from "@/components/ui/PageHero";
 import { EditorialMedia } from "@/components/ui/EditorialMedia";
 import { AcquisitionProcessExplorer } from "@/components/interactive/AcquisitionProcessExplorer";
 import { generatePageMetadata } from "@/lib/metadata";
@@ -90,21 +91,26 @@ export default function ApproachPage() {
   ];
 
   return (
-    <div className="pt-24 sm:pt-28">
-      {/* Editorial Hero */}
-      <section className="bg-brand-void text-white py-16 sm:py-24 border-b border-brand-edge-dark">
-        <Container>
-          <div className="max-w-3xl">
-            <span className="eyebrow eyebrow-dark mb-4">Operational Methodology</span>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extralight tracking-tight text-white mb-6">
-              FROM DISCOVERY TO DEVELOPMENT.
-            </h1>
-            <p className="text-base sm:text-xl font-light text-brand-mist/85 leading-relaxed">
-              We take land and property opportunities from initial spatial identification through rigorous multi-disciplinary due diligence, contractual control, planning consent, capital structuring, construction delivery and asset realisation.
-            </p>
-          </div>
-        </Container>
-      </section>
+    <div>
+      {/* Full-Screen Editorial Hero */}
+      <PageHero
+        eyebrow="Execution Methodology"
+        badge="7-Stage Value Creation Model"
+        title="FROM DISCOVERY"
+        subtitle="TO DEVELOPMENT."
+        description="We take land and property opportunities from initial spatial identification through rigorous multi-disciplinary due diligence, contractual control, planning consent, capital structuring, construction delivery and asset realisation."
+        imageSrc="https://images.unsplash.com/photo-1541888946425-d0fbb186156a?auto=format&fit=crop&w=1920&q=80"
+        imageAlt="UK civil infrastructure and land development execution"
+      >
+        <div className="flex flex-wrap items-center gap-4">
+          <Button href="/submit" variant="primary" size="lg" showArrow>
+            Submit an Opportunity
+          </Button>
+          <Button href="#evidence-before-assumption" variant="ghost" size="lg">
+            Our Truth Doctrine
+          </Button>
+        </div>
+      </PageHero>
 
       {/* Interactive 7-Stage Process Explorer */}
       <Section className="bg-white">

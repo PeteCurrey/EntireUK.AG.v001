@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
+import { PageHero } from "@/components/ui/PageHero";
 import { SITE_CONFIG } from "@/lib/constants";
 import {
   Mail,
@@ -103,21 +104,29 @@ export default function ContactPage() {
   ];
 
   return (
-    <div className="pt-24 sm:pt-28">
-      {/* Editorial Header */}
-      <section className="bg-brand-void text-white py-16 sm:py-24 border-b border-brand-edge-dark">
-        <Container>
-          <div className="max-w-3xl">
-            <span className="eyebrow eyebrow-dark mb-4">Start a Conversation</span>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extralight tracking-tight text-white mb-6">
-              START A CONVERSATION.
-            </h1>
-            <p className="text-base sm:text-xl font-light text-brand-mist/85 leading-relaxed">
-              Whether you own land, represent a property vendor, or wish to explore a planning or capital partnership, our principals are directly accessible.
-            </p>
-          </div>
-        </Container>
-      </section>
+    <div>
+      {/* Full-Screen Editorial Hero */}
+      <PageHero
+        eyebrow="Direct Engagement"
+        badge="Principal Response"
+        title="START A"
+        subtitle="CONVERSATION."
+        description="Whether you own land, represent a property vendor, or wish to explore a planning or capital partnership, our principals are directly accessible."
+        imageSrc="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1920&q=80"
+        imageAlt="Entire UK executive consultation environment"
+      >
+        <div className="flex flex-wrap items-center gap-4">
+          <Button href="/submit" variant="primary" size="lg" showArrow>
+            Submit an Opportunity
+          </Button>
+          <a
+            href={`tel:${SITE_CONFIG.phone.replace(/[^0-9+]/g, "")}`}
+            className="inline-flex items-center justify-center font-normal tracking-wide transition-all duration-300 ease-brand rounded-sm cursor-pointer select-none px-7 py-3.5 text-base gap-2.5 bg-white/[0.04] text-brand-mist hover:text-white border border-white/10 hover:border-white/25 hover:bg-white/[0.08]"
+          >
+            <span>Call {SITE_CONFIG.phone}</span>
+          </a>
+        </div>
+      </PageHero>
 
       {/* 4 Distinct Contact Pathways */}
       <section className="bg-brand-surface py-12 sm:py-16 border-b border-brand-edge">
