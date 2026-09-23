@@ -52,6 +52,13 @@ export default async function InternalLayout({
               <span>Land Radar</span>
             </Link>
             <Link
+              href="/acquisitions"
+              className="text-emerald-400 hover:text-emerald-300 font-medium transition-colors flex items-center space-x-1.5"
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+              <span>Acquisitions</span>
+            </Link>
+            <Link
               href="/review"
               className="text-brand-silver hover:text-white transition-colors"
             >

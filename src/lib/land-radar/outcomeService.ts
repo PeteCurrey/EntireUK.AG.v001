@@ -26,7 +26,7 @@ import { getLandRadarDb, getPersistenceMode, PersistenceError } from './db';
 // Valid lifecycle transitions
 // ---------------------------------------------------------------------------
 
-const VALID_TRANSITIONS: Record<AcquisitionOutcomeState, AcquisitionOutcomeState[]> = {
+export const VALID_TRANSITIONS: Record<AcquisitionOutcomeState, AcquisitionOutcomeState[]> = {
   SURFACED: ['SCREENED', 'REJECTED_OTHER'],
   SCREENED: ['ANALYST_REVIEW', 'REJECTED_PLANNING', 'REJECTED_MARKET', 'REJECTED_OTHER'],
   ANALYST_REVIEW: [

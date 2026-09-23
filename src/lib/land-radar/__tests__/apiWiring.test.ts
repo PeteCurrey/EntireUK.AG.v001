@@ -144,7 +144,7 @@ describe('Land Radar — OS & HMLR API Wiring & Epistemic Integrity', () => {
     it('RoadAdapter does not fake success when live OS API is missing in production mode', async () => {
       delete process.env.OS_API_KEY;
       const prevNodeEnv = process.env.NODE_ENV;
-      process.env.NODE_ENV = 'production';
+      (process.env as any).NODE_ENV = 'production';
 
       try {
         const adapter = new RoadAdapter();
@@ -152,7 +152,7 @@ describe('Land Radar — OS & HMLR API Wiring & Epistemic Integrity', () => {
         const res = await adapter.fetchWithMode(WARWICK_PILOT, { useLocalOnly: false });
         assert.notStrictEqual(res.retrievalMode, 'live_api');
       } finally {
-        process.env.NODE_ENV = prevNodeEnv;
+        (process.env as any).NODE_ENV = prevNodeEnv;
       }
     });
 

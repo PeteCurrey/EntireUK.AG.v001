@@ -1442,6 +1442,8 @@ export interface AcquisitionContactRecord {
   outcome: ContactOutcomeCode;
   availability_information: string | null;
   next_action: string | null;
+  follow_up_date?: string | null;
+  follow_up_status?: 'pending' | 'completed' | 'deferred' | 'cancelled' | 'none';
   analyst: string;
   notes: string | null;
   created_at: string;
@@ -1576,6 +1578,124 @@ export interface AcquisitionGateReport {
   next_action: string;
   generated_at: string;
   generated_by: string;
+}
+
+// ---------------------------------------------------------------------------
+// Phase 13: Acquisition Operations Workbench & Opportunity Execution
+// ---------------------------------------------------------------------------
+
+export type NextActionCode =
+  | 'VERIFY_TITLE'
+  | 'OBTAIN_ADDITIONAL_TITLE'
+  | 'RESOLVE_TITLE_CONTRADICTION'
+  | 'VERIFY_ACCESS'
+  | 'INVESTIGATE_AVAILABILITY'
+  | 'CONTACT_OWNER_OR_AGENT'
+  | 'FOLLOW_UP_CONTACT'
+  | 'OBTAIN_MARKET_EVIDENCE'
+  | 'REVIEW_PLANNING_HISTORY'
+  | 'REVIEW_LOCAL_PLAN'
+  | 'INVESTIGATE_ENVIRONMENTAL_CONSTRAINT'
+  | 'COMPLETE_ACQUISITION_GATE'
+  | 'PLACE_ON_HOLD'
+  | 'REVIEW_REJECTION';
+
+export interface DeterministicNextAction {
+  code: NextActionCode;
+  label: string;
+  category:
+    | 'title'
+    | 'access'
+    | 'availability'
+    | 'contact'
+    | 'planning'
+    | 'market'
+    | 'environmental'
+    | 'gate'
+    | 'lifecycle';
+  priority: 'critical' | 'high' | 'medium' | 'low';
+  rationale: string;
+  trigger_evidence: string;
+  blocked_by: string | null;
+  prerequisites_met: boolean;
+}
+
+export type ChecklistDimension =
+  | 'site'
+  | 'ownership'
+  | 'availability'
+  | 'planning'
+  | 'access'
+  | 'market'
+  | 'capacity'
+  | 'acquisition';
+
+export type ChecklistEpistemicStatus =
+  | 'KNOWN'
+  | 'UNKNOWN'
+  | 'UNAVAILABLE'
+  | 'STALE'
+  | 'CONTRADICTED'
+  | 'NOT_APPLICABLE';
+
+export interface EvidenceChecklistItem {
+  id: string;
+  dimension: ChecklistDimension;
+  label: string;
+  status: ChecklistEpistemicStatus;
+  evidence_source: string | null;
+  retrieval_mode: RetrievalMode | null;
+  retrieval_date: string | null;
+  summary: string;
+  provenance_note?: string;
+}
+
+export interface ContradictionResolutionRecord {
+  id: string;
+  site_id: string;
+  site_reference: string;
+  contradiction_id: string;
+  contradiction_type: string;
+  resolution_status: 'RESOLVED' | 'UNRESOLVED' | 'DEFERRED_TO_LEGAL' | 'ACKNOWLEDGED_MATERIAL';
+  resolution_rationale: string;
+  supporting_evidence_ref?: string | null;
+  resolved_by: string;
+  resolved_at: string;
+  created_at: string;
+}
+
+export type OperationalQueueGroup =
+  | 'ACTION_REQUIRED'
+  | 'WAITING_FOR_RESPONSE'
+  | 'EVIDENCE_MISSING'
+  | 'CONTRADICTIONS'
+  | 'FOLLOW_UPS_DUE'
+  | 'READY_FOR_GATE'
+  | 'ON_HOLD';
+
+export interface OperationalCandidateSummary {
+  site_id: string;
+  site_reference: string;
+  location: string;
+  site_type: string;
+  area_sqm: number | null;
+  lifecycle_stage: AcquisitionOutcomeState;
+  surfaced_date: string;
+  last_activity_date: string;
+  evidence_completeness_pct: number;
+  priority_band: 'HIGH' | 'MEDIUM' | 'LOW' | 'EXCLUDED';
+  next_action: DeterministicNextAction;
+  ownership_status: OwnershipEvidenceStatus;
+  title_reference: string | null;
+  availability_state: AcquisitionAvailabilityState;
+  planning_status: string;
+  access_status: string;
+  contradiction_count: number;
+  unresolved_contradictions: number;
+  latest_contact: AcquisitionContactRecord | null;
+  follow_up_due_date: string | null;
+  assigned_analyst: string;
+  queue_groups: OperationalQueueGroup[];
 }
 
 
