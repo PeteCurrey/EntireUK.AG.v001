@@ -6,13 +6,14 @@ import { usePathname } from "next/navigation";
 import { BrandLogo } from "../ui/BrandMark";
 import { Button } from "../ui/Button";
 import { NAV_LINKS, PRIMARY_CTA } from "@/lib/constants";
-import { Menu, X, Compass, Lock } from "lucide-react";
+import { Menu, X, Compass, Lock, ArrowLeft } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
 
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const pathname = usePathname();
+  const isSignIn = pathname === "/sign-in";
 
   useEffect(() => {
     const handleScroll = () => {
@@ -32,7 +33,7 @@ export function Header() {
     <>
       <header
         className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
-          scrolled || mobileMenuOpen
+          scrolled || mobileMenuOpen || isSignIn
             ? "bg-brand-void/90 backdrop-blur-md border-b border-white/[0.08] shadow-lg shadow-black/20"
             : "bg-transparent border-b border-transparent"
         }`}
@@ -48,102 +49,117 @@ export function Header() {
               <BrandLogo onDark={true} />
             </Link>
 
-            {/* Desktop Navigation Links */}
-            <nav
-              className="hidden lg:flex items-center gap-8"
-              aria-label="Primary Navigation"
-            >
-              {NAV_LINKS.map((link) => {
-                const isActive = pathname === link.href;
-                return (
+            {isSignIn ? (
+              /* When on sign-in page: hide main website nav, only show "Back To Site" link */
+              <Link
+                href="/"
+                className="text-xs font-light tracking-wider uppercase text-brand-mist/80 hover:text-white px-3.5 py-2 rounded-sm border border-white/10 hover:border-white/30 hover:bg-white/[0.04] transition-all flex items-center gap-2 group"
+                aria-label="Back To Site"
+              >
+                <ArrowLeft className="w-3.5 h-3.5 text-brand-electric transition-transform group-hover:-translate-x-0.5" />
+                <span>Back To Site</span>
+              </Link>
+            ) : (
+              <>
+                {/* Desktop Navigation Links */}
+                <nav
+                  className="hidden lg:flex items-center gap-8"
+                  aria-label="Primary Navigation"
+                >
+                  {NAV_LINKS.map((link) => {
+                    const isActive = pathname === link.href;
+                    return (
+                      <Link
+                        key={link.href}
+                        href={link.href}
+                        className={`text-sm tracking-wide transition-colors py-1 relative ${
+                          isActive
+                            ? "text-white font-normal"
+                            : "text-brand-mist/75 hover:text-white font-light"
+                        }`}
+                      >
+                        {link.label}
+                        {isActive && (
+                          <span className="absolute bottom-0 inset-x-0 h-px bg-brand-electric" />
+                        )}
+                      </Link>
+                    );
+                  })}
+                </nav>
+
+                {/* Desktop CTAs: Distinct separation between Public Submission and Internal Platform */}
+                <div className="hidden lg:flex items-center gap-3">
                   <Link
-                    key={link.href}
-                    href={link.href}
-                    className={`text-sm tracking-wide transition-colors py-1 relative ${
-                      isActive
-                        ? "text-white font-normal"
-                        : "text-brand-mist/75 hover:text-white font-light"
-                    }`}
+                    href="/dashboard"
+                    className="text-xs font-light tracking-wider uppercase text-brand-mist/80 hover:text-white px-3 py-2 rounded-sm border border-white/10 hover:border-cyan-400/50 hover:bg-white/[0.03] transition-all flex items-center gap-2"
+                    title="Internal Land Radar intelligence platform"
                   >
-                    {link.label}
-                    {isActive && (
-                      <span className="absolute bottom-0 inset-x-0 h-px bg-brand-electric" />
-                    )}
+                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+                    <span>Land Radar Login</span>
                   </Link>
-                );
-              })}
-            </nav>
 
-            {/* Desktop CTAs: Distinct separation between Public Submission and Internal Platform */}
-            <div className="hidden lg:flex items-center gap-3">
-              <Link
-                href="/dashboard"
-                className="text-xs font-light tracking-wider uppercase text-brand-mist/80 hover:text-white px-3 py-2 rounded-sm border border-white/10 hover:border-cyan-400/50 hover:bg-white/[0.03] transition-all flex items-center gap-2"
-                title="Internal Land Radar intelligence platform"
-              >
-                <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
-                <span>Land Radar Login</span>
-              </Link>
+                  <Button
+                    href={PRIMARY_CTA.href}
+                    variant="primary"
+                    size="sm"
+                    showArrow
+                    onClick={() =>
+                      trackEvent({
+                        name: "cta_submit_opportunity_clicked",
+                        properties: { location: "header" },
+                      })
+                    }
+                  >
+                    {PRIMARY_CTA.label}
+                  </Button>
+                </div>
 
-              <Button
-                href={PRIMARY_CTA.href}
-                variant="primary"
-                size="sm"
-                showArrow
-                onClick={() =>
-                  trackEvent({
-                    name: "cta_submit_opportunity_clicked",
-                    properties: { location: "header" },
-                  })
-                }
-              >
-                {PRIMARY_CTA.label}
-              </Button>
-            </div>
+                {/* Mobile Menu Controls */}
+                <div className="flex items-center gap-2 lg:hidden">
+                  <Link
+                    href="/dashboard"
+                    className="text-xs text-brand-mist hover:text-white px-2.5 py-1.5 rounded-sm border border-white/10 flex items-center gap-1.5"
+                    title="Land Radar Login"
+                  >
+                    <Compass className="w-3 h-3 text-cyan-400" />
+                    <span className="text-[11px] font-mono">Radar</span>
+                  </Link>
 
-            {/* Mobile Menu Controls */}
-            <div className="flex items-center gap-2 lg:hidden">
-              <Link
-                href="/dashboard"
-                className="text-xs text-brand-mist hover:text-white px-2.5 py-1.5 rounded-sm border border-white/10 flex items-center gap-1.5"
-                title="Land Radar Login"
-              >
-                <Compass className="w-3 h-3 text-cyan-400" />
-                <span className="text-[11px] font-mono">Radar</span>
-              </Link>
-
-              <Button
-                href={PRIMARY_CTA.href}
-                variant="primary"
-                size="sm"
-                className="text-xs px-3 py-1.5"
-                onClick={() =>
-                  trackEvent({
-                    name: "cta_submit_opportunity_clicked",
-                    properties: { location: "header_mobile" },
-                  })
-                }
-              >
-                Submit
-              </Button>
-              <button
-                type="button"
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                aria-expanded={mobileMenuOpen}
-                aria-controls="mobile-navigation"
-                aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
-                className="flex h-10 w-10 items-center justify-center rounded-sm border border-white/12 text-brand-mist hover:text-white hover:border-white/30 transition-colors"
-              >
-                {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-              </button>
-            </div>
+                  <Button
+                    href={PRIMARY_CTA.href}
+                    variant="primary"
+                    size="sm"
+                    className="text-xs px-3 py-1.5"
+                    onClick={() =>
+                      trackEvent({
+                        name: "cta_submit_opportunity_clicked",
+                        properties: { location: "header_mobile" },
+                      })
+                    }
+                  >
+                    Submit
+                  </Button>
+                  <button
+                    type="button"
+                    onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                    aria-expanded={mobileMenuOpen}
+                    aria-controls="mobile-navigation"
+                    aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+                    className="flex h-10 w-10 items-center justify-center rounded-sm border border-white/12 text-brand-mist hover:text-white hover:border-white/30 transition-colors"
+                  >
+                    {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+                  </button>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </header>
 
       {/* Mobile Navigation Drawer */}
-      <div
-        id="mobile-navigation"
+      {!isSignIn && (
+        <div
+          id="mobile-navigation"
         role="dialog"
         aria-modal="true"
         aria-label="Mobile Navigation"
@@ -226,6 +242,7 @@ export function Header() {
           </div>
         </div>
       </div>
-    </>
+    )}
+  </>
   );
 }

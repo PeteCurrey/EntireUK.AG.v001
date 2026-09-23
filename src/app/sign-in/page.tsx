@@ -54,14 +54,14 @@ function SignInForm() {
 
   return (
     <div className="w-full max-w-md mx-auto px-6 py-10 sm:py-16">
-      {/* Go Back */}
+      {/* Back to Site */}
       <div className="mb-8">
         <Link
           href="/"
           className="inline-flex items-center gap-1.5 text-xs text-brand-silver hover:text-brand-graphite font-medium transition-colors group"
         >
           <ArrowLeft className="w-3.5 h-3.5 transition-transform group-hover:-translate-x-0.5" />
-          Go Back
+          Back to Site
         </Link>
       </div>
 
@@ -257,7 +257,7 @@ function SignInForm() {
 
 export default function SignInPage() {
   return (
-    <main className="min-h-screen flex flex-col lg:flex-row bg-brand-void text-white">
+    <div className="min-h-screen flex flex-col lg:flex-row bg-brand-void text-white pt-[72px]">
       {/* LEFT SIDE: Cinematic Editorial Architectural & Land Imagery (Desktop 50%) */}
       <div className="relative lg:w-1/2 min-h-[260px] lg:min-h-screen bg-brand-void overflow-hidden flex flex-col justify-between p-8 sm:p-12 lg:p-16">
         {/* Subtle architectural background pattern & lighting */}
@@ -288,12 +288,12 @@ export default function SignInPage() {
 
         {/* Content: Header */}
         <div className="relative z-10 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-3 group">
+          <div className="flex items-center gap-2.5">
             <BrandMark size="sm" />
-            <span className="text-sm font-semibold tracking-wide text-white group-hover:text-brand-electric transition-colors">
-              ENTIRE UK
+            <span className="text-xs font-mono uppercase tracking-widest text-cyan-400">
+              Land Radar
             </span>
-          </Link>
+          </div>
           <span className="text-[10px] font-mono uppercase tracking-widest text-brand-mist/60 px-2.5 py-1 rounded bg-white/[0.04] border border-white/10">
             CONFIDENTIAL
           </span>
@@ -336,6 +336,6 @@ export default function SignInPage() {
           <SignInForm />
         </Suspense>
       </div>
-    </main>
+    </div>
   );
 }
