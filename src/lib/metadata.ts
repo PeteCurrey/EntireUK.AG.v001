@@ -49,7 +49,7 @@ export function generatePageMetadata({
 export function getOrganizationStructuredData() {
   return {
     "@context": "https://schema.org",
-    "@type": "RealEstateAgent",
+    "@type": "Corporation",
     name: SITE_CONFIG.name,
     legalName: SITE_CONFIG.legalName,
     url: SITE_CONFIG.domain,

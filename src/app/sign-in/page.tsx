@@ -315,11 +315,11 @@ export default function SignInPage() {
           </p>
 
           <div className="pt-4 border-t border-white/[0.08] flex items-center gap-6 text-[11px] font-mono text-brand-mist/50">
-            <span>Pilot 001 · Warwick</span>
+            <span>Authorised Personnel Only</span>
             <span>·</span>
-            <span>Pilot 002 · Rugby</span>
+            <span>Encrypted Session</span>
             <span>·</span>
-            <span>Strategy V3 Frozen</span>
+            <span>Strict Audit Logging</span>
           </div>
         </div>
       </div>

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { createSubmission } from "@/lib/land-radar/submissionService";
 
 export async function POST(req: NextRequest) {
   try {
@@ -29,7 +30,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Simulated duplicate check (e.g. if test simulated duplicate flag is sent)
+    // Duplicate check simulation for testing
     if (data.postcode === "DUP1 1IC" || data.is_duplicate_test) {
       return NextResponse.json(
         {
@@ -40,38 +41,40 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Generate unique reference
-    const submission_id = `EUK-${Date.now().toString(36).toUpperCase()}-${Math.random()
-      .toString(36)
-      .substring(2, 6)
-      .toUpperCase()}`;
-
-    const timestamp = new Date().toISOString();
-
-    // In this Phase 1 foundation, we log the payload to demonstrate the clean integration boundary
-    console.log("[Entire UK Opportunity Intake Received]", {
-      submission_id,
+    // Authoritative persistence via submissionService
+    const persisted = await createSubmission({
       submission_type,
-      received_at: timestamp,
-      contact: { name: data.name, email: data.email, phone: data.phone },
-      property: { address: data.address, postcode: data.postcode, size: data.size },
+      submitter_name: data.name || data.submitter_name || "Unspecified Submitter",
+      email: data.email,
+      phone: data.phone || null,
+      organisation: data.organisation || data.company || null,
+      address: data.address || null,
+      postcode: data.postcode || null,
+      site_size_description: data.size || data.site_size_description || null,
+      current_use: data.current_use || data.use || null,
+      planning_status: data.planning_status || data.planning || null,
+      ownership_status: data.ownership_status || data.ownership || null,
+      opportunity_description: data.description || data.opportunity_description || null,
+      submitted_notes: data.notes || data.comments || null,
+      consent_acknowledged: data.consent ?? true,
+      raw_payload: data,
     });
 
     return NextResponse.json(
       {
         success: true,
-        submission_id,
-        submission_type,
-        status: "received",
-        created_at: timestamp,
-        message: "Submission received. It will be reviewed against our acquisition criteria.",
+        submission_id: persisted.submission_reference,
+        submission_type: persisted.submission_type,
+        status: persisted.status,
+        created_at: persisted.created_at,
+        message: "Submission received and persisted. It will be reviewed against our acquisition criteria.",
       },
       { status: 201 }
     );
   } catch (err: unknown) {
-    console.error("[Submission API Error]", err);
+    const message = err instanceof Error ? err.message : "Internal server error";
     return NextResponse.json(
-      { error: "Internal server error occurred while persisting submission." },
+      { error: "Failed to persist submission: " + message },
       { status: 500 }
     );
   }

@@ -34,6 +34,85 @@ export interface EvaluateNextActionParams {
   contactHistory?: AcquisitionContactRecord[];
 }
 
+/**
+ * Detects whether credible market-facing disposal contact evidence exists
+ * independently of registered HMLR ownership verification (DEF-013-02).
+ *
+ * Epistemic boundary:
+ * A commercial selling agent or disposal instruction can justify early commercial contact.
+ * However, agent contact NEVER validates or infers registered title ownership.
+ */
+export function findCredibleDisposalAgent(
+  ownershipSummary: OwnershipIntelligenceSummary,
+  contactHistory: AcquisitionContactRecord[] = []
+): { hasAgent: boolean; agentDetail?: string } {
+  // 1. Check acquisition evidence records for agent communications or market intelligence
+  const agentAcq = ownershipSummary.acquisition_evidence?.find(
+    (e) =>
+      (e.evidence_type === 'agent_communication' || e.evidence_type === 'market_agent_intelligence') &&
+      e.confidence !== 'low'
+  );
+  if (agentAcq) {
+    return { hasAgent: true, agentDetail: `${agentAcq.actor} (${agentAcq.summary})` };
+  }
+
+  // 2. Check availability history for agent marketing / particulars
+  const agentAvail = ownershipSummary.availability_history?.find(
+    (a) =>
+      (a.availability_state === 'AVAILABLE' ||
+        a.availability_state === 'POTENTIALLY_AVAILABLE' ||
+        a.availability_state === 'UNDER_DISCUSSION') &&
+      Boolean(
+        a.evidence_source?.toLowerCase().includes('agent') ||
+        a.evidence_source?.toLowerCase().includes('particulars') ||
+        a.evidence_source?.toLowerCase().includes('listing') ||
+        a.evidence_source?.toLowerCase().includes('broker') ||
+        a.evidence_notes?.toLowerCase().includes('agent')
+      )
+  );
+  if (agentAvail) {
+    return {
+      hasAgent: true,
+      agentDetail: `${agentAvail.evidence_source || 'Agent'}: ${agentAvail.evidence_notes || 'Marketed disposal'}`,
+    };
+  }
+
+  // 3. Check ownership evidence for marketing particulars or commercial agent source
+  const agentOwner = ownershipSummary.ownership_evidence_records?.find(
+    (o) =>
+      (o.evidence_status === 'SUPPORTED' || o.evidence_status === 'INDICATIVE' || o.evidence_status === 'VERIFIED') &&
+      Boolean(
+        o.ownership_source?.toLowerCase().includes('agent') ||
+        o.ownership_source?.toLowerCase().includes('particulars') ||
+        o.ownership_source?.toLowerCase().includes('disposal') ||
+        o.proprietor_notes?.toLowerCase().includes('agent') ||
+        o.analyst_notes?.toLowerCase().includes('agent')
+      )
+  );
+  if (agentOwner) {
+    return {
+      hasAgent: true,
+      agentDetail: `${agentOwner.ownership_source || 'Agent'}: ${agentOwner.proprietor_notes || agentOwner.analyst_notes || 'Agent identified'}`,
+    };
+  }
+
+  // 4. Check contact history for existing agent intermediary interactions
+  const agentContact = contactHistory.find(
+    (c) =>
+      c.contact_type === 'agent_intermediary' ||
+      Boolean(c.organisation_or_role && c.organisation_or_role.toLowerCase().includes('agent')) ||
+      Boolean(c.organisation_or_role && c.organisation_or_role.toLowerCase().includes('broker'))
+  );
+  if (agentContact) {
+    return {
+      hasAgent: true,
+      agentDetail: `${agentContact.organisation_or_role || 'Agent intermediary'}`,
+    };
+  }
+
+  return { hasAgent: false };
+}
+
 export function evaluateDeterministicNextAction(
   params: EvaluateNextActionParams
 ): DeterministicNextAction {
@@ -141,22 +220,26 @@ export function evaluateDeterministicNextAction(
     ownershipSummary.ownership_evidence_records.some((e) => e.evidence_status === 'VERIFIED') ||
     ownershipSummary.title_relationships.some((r) => r.relationship_strength === 'STRONG');
 
-  if (!hasVerifiedTitle) {
+  const disposalAgent = findCredibleDisposalAgent(ownershipSummary, contactHistory);
+
+  if (!hasVerifiedTitle && !disposalAgent.hasAgent) {
     return {
       code: 'VERIFY_TITLE',
       label: 'Verify Official Title Register (HMLR)',
       category: 'title',
       priority: 'high',
-      rationale: 'Cadastral identity is unverified. Official HM Land Registry title search required to confirm registered proprietor, tenure and easements.',
-      trigger_evidence: `Ownership status: ${ownershipSummary.ownership_evidence_status}, Titles mapped: ${ownershipSummary.title_relationships.length}`,
+      rationale:
+        'Cadastral identity is unverified and no market-facing disposal agent is on record. ' +
+        'Official HM Land Registry title search required to confirm registered proprietor, tenure and easements before direct owner contact.',
+      trigger_evidence: `Ownership status: ${ownershipSummary.ownership_evidence_status}, Titles mapped: ${ownershipSummary.title_relationships.length}, Disposal agent: none`,
       blocked_by: null,
       prerequisites_met: true,
     };
   }
 
   if (
-    ownershipSummary.complexity === 'MULTI_TITLE' ||
-    ownershipSummary.complexity === 'FRAGMENTED'
+    hasVerifiedTitle &&
+    (ownershipSummary.complexity === 'MULTI_TITLE' || ownershipSummary.complexity === 'FRAGMENTED')
   ) {
     const unverifiedTitles = ownershipSummary.title_relationships.filter(
       (r) => r.relationship_strength === 'UNKNOWN' || r.relationship_strength === 'WEAK'
@@ -248,8 +331,16 @@ export function evaluateDeterministicNextAction(
   // -------------------------------------------------------------------------
   const availabilityState = ownershipSummary.availability_state;
 
-  // Rule 1 Enforcement: If ownership is verified, but availability is unknown
-  if (availabilityState === 'UNKNOWN') {
+  const isPositiveAvailability =
+    availabilityState === 'AVAILABLE' ||
+    availabilityState === 'POTENTIALLY_AVAILABLE' ||
+    availabilityState === 'UNDER_DISCUSSION';
+
+  const isAgentOutreachEligible =
+    disposalAgent.hasAgent && availabilityState !== 'NOT_AVAILABLE';
+
+  // Rule 1 Enforcement: If ownership is verified without disposal agent, but availability is unknown
+  if (availabilityState === 'UNKNOWN' && !disposalAgent.hasAgent) {
     return {
       code: 'INVESTIGATE_AVAILABILITY',
       label: 'Investigate Commercial Availability',
@@ -262,20 +353,24 @@ export function evaluateDeterministicNextAction(
     };
   }
 
-  // If availability is affirmative or under discussion, evaluate contact state
-  if (
-    availabilityState === 'AVAILABLE' ||
-    availabilityState === 'POTENTIALLY_AVAILABLE' ||
-    availabilityState === 'UNDER_DISCUSSION'
-  ) {
+  // If availability is affirmative or under discussion, OR credible disposal agent identified
+  if (isPositiveAvailability || isAgentOutreachEligible) {
     if (contactHistory.length === 0) {
+      const isAgentOnly = !hasVerifiedTitle && disposalAgent.hasAgent;
       return {
         code: 'CONTACT_OWNER_OR_AGENT',
-        label: 'Initiate Introductory Acquisition Enquiry',
+        label: isAgentOnly
+          ? 'Initiate Introductory Enquiry with Disposal Agent'
+          : 'Initiate Introductory Acquisition Enquiry',
         category: 'contact',
         priority: 'high',
-        rationale: `Foundational title and positive availability signals established (${availabilityState}). Issue formal introductory communication to proprietor or controlling agent.`,
-        trigger_evidence: `Proprietor identified, availability = ${availabilityState}, contact count = 0`,
+        rationale: isAgentOnly
+          ? `Credible market-facing disposal agent identified (${disposalAgent.agentDetail}). ` +
+            `Initiate introductory commercial enquiry with instructed agent while formal HMLR title verification proceeds in parallel.`
+          : `Foundational title and positive availability signals established (${availabilityState}). Issue formal introductory communication to proprietor or controlling agent.`,
+        trigger_evidence: isAgentOnly
+          ? `Market-facing disposal agent: ${disposalAgent.agentDetail}; HMLR title unverified. Epistemic rule: agent != owner.`
+          : `Proprietor identified, availability = ${availabilityState}, contact count = 0`,
         blocked_by: null,
         prerequisites_met: true,
       };
@@ -364,6 +459,22 @@ export function evaluateDeterministicNextAction(
       rationale: 'All foundational evidence verified: title mapped, proprietor engaged, availability affirmed, no active blockers. Proceed to formal commercial gate decision.',
       trigger_evidence: `Title verified, availability = ${availabilityState}, contradictions = 0`,
       blocked_by: null,
+      prerequisites_met: true,
+    };
+  }
+
+  // If agent outreach occurred but HMLR title remains unverified, require title verification before commercial gate
+  if (!hasVerifiedTitle) {
+    return {
+      code: 'VERIFY_TITLE',
+      label: 'Verify Official Title Register (HMLR)',
+      category: 'title',
+      priority: 'high',
+      rationale:
+        'Market enquiries or disposal agent dialogue initiated, but official cadastral title remains unverified. ' +
+        'HM Land Registry title search required before convening formal commercial acquisition gate.',
+      trigger_evidence: `Ownership status: ${ownershipSummary.ownership_evidence_status}, HMLR title pending.`,
+      blocked_by: 'Unverified HMLR title register',
       prerequisites_met: true,
     };
   }

@@ -104,7 +104,7 @@ export function LandRadarFeature() {
             <div className="mb-4 flex items-center gap-2">
               <span className="eyebrow eyebrow-dark">Proprietary Infrastructure</span>
               <span className="text-[10px] font-mono uppercase tracking-widest text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded border border-cyan-500/20">
-                Engine Status: Live In Pilot
+                Spatial Analysis Platform
               </span>
             </div>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extralight tracking-tight text-white leading-tight">

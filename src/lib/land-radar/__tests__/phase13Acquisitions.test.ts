@@ -568,4 +568,253 @@ describe('Phase 13: Acquisition Operations Workbench & Opportunity Execution', (
       );
     });
   });
+
+  // -------------------------------------------------------------------------
+  // 5. DEF-013-02: Contact Gating vs Market-Facing Disposal Contacts
+  // -------------------------------------------------------------------------
+  describe('DEF-013-02: Contact Gating vs Market-Facing Disposal Contacts', () => {
+    const knownPlanningSignal = {
+      site_id: mockSite.id,
+      signal_type: 'planning_activity' as const,
+      status: 'known' as const,
+      value: 1,
+      explanation: 'Planning confirmed',
+    };
+    const knownMarketSignal = {
+      site_id: mockSite.id,
+      signal_type: 'market_signal' as const,
+      status: 'known' as const,
+      value: 1,
+      explanation: 'Comps available',
+    };
+
+    it('Scenario 1: verified title + agent -> recommends contact with positive availability', () => {
+      const summary = createMockOwnership({
+        ownership_evidence_records: [{ evidence_status: 'VERIFIED' } as any],
+        title_relationships: [{ relationship_strength: 'STRONG', title_reference: 'WK89210' } as any],
+        availability_state: 'AVAILABLE',
+        acquisition_evidence: [
+          {
+            id: 'acq-ev-1',
+            site_id: mockSite.id,
+            site_reference: mockSite.internal_reference,
+            evidence_type: 'agent_communication',
+            actor: 'Bromwich Hardy',
+            actor_role: 'Commercial Disposal Agent',
+            summary: 'Active marketing particulars received',
+            source_reference: 'BH-WARWICK-2026',
+            contradiction_status: 'supports_prioritisation',
+            confidence: 'high',
+            interpretation: 'Instructed selling agent',
+            recorded_by: 'analyst@entire-uk.com',
+            created_at: new Date().toISOString(),
+          } as any,
+        ],
+      });
+
+      const action = evaluateDeterministicNextAction({
+        site: mockSite,
+        ownershipSummary: summary,
+        signals: [knownPlanningSignal, knownMarketSignal],
+        contradictions: emptyContradictions,
+        contactHistory: [],
+      });
+
+      assert.equal(action.code, 'CONTACT_OWNER_OR_AGENT');
+      assert.equal(action.prerequisites_met, true);
+    });
+
+    it('Scenario 2: verified title + no agent -> recommends introductory contact when availability is positive', () => {
+      const summary = createMockOwnership({
+        ownership_evidence_records: [{ evidence_status: 'VERIFIED' } as any],
+        title_relationships: [{ relationship_strength: 'STRONG', title_reference: 'WK89210' } as any],
+        availability_state: 'AVAILABLE',
+        acquisition_evidence: [],
+      });
+
+      const action = evaluateDeterministicNextAction({
+        site: mockSite,
+        ownershipSummary: summary,
+        signals: [knownPlanningSignal, knownMarketSignal],
+        contradictions: emptyContradictions,
+        contactHistory: [],
+      });
+
+      assert.equal(action.code, 'CONTACT_OWNER_OR_AGENT');
+      assert.match(action.label, /Initiate Introductory Acquisition Enquiry/);
+    });
+
+    it('Scenario 3: unknown title + credible agent -> recommends contacting disposal agent without requiring HMLR title first', () => {
+      const summary = createMockOwnership({
+        ownership_evidence_status: 'UNKNOWN',
+        ownership_evidence_records: [],
+        title_relationships: [],
+        availability_state: 'AVAILABLE',
+        acquisition_evidence: [
+          {
+            id: 'acq-ev-2',
+            site_id: mockSite.id,
+            site_reference: mockSite.internal_reference,
+            evidence_type: 'agent_communication',
+            actor: 'Bromwich Hardy Commercial',
+            actor_role: 'Disposal Agent',
+            summary: 'Instructed disposal of commercial yard',
+            source_reference: 'BH-DOC-001',
+            contradiction_status: 'supports_prioritisation',
+            confidence: 'high',
+            interpretation: 'Commercial agent marketing particulars confirmed',
+            recorded_by: 'analyst@entire-uk.com',
+            created_at: new Date().toISOString(),
+          } as any,
+        ],
+      });
+
+      const action = evaluateDeterministicNextAction({
+        site: mockSite,
+        ownershipSummary: summary,
+        signals: [knownPlanningSignal, knownMarketSignal],
+        contradictions: emptyContradictions,
+        contactHistory: [],
+      });
+
+      assert.equal(action.code, 'CONTACT_OWNER_OR_AGENT');
+      assert.match(action.label, /Disposal Agent/);
+      assert.match(action.trigger_evidence, /agent != owner/);
+      assert.equal(action.prerequisites_met, true);
+    });
+
+    it('Scenario 4: unavailable HMLR + credible agent -> allows contact with instructed agent', () => {
+      const summary = createMockOwnership({
+        ownership_evidence_status: 'UNKNOWN',
+        ownership_evidence_records: [],
+        title_relationships: [],
+        availability_state: 'POTENTIALLY_AVAILABLE',
+        availability_history: [
+          {
+            id: 'avail-ev-1',
+            site_id: mockSite.id,
+            site_reference: mockSite.internal_reference,
+            availability_state: 'POTENTIALLY_AVAILABLE',
+            evidence_source: 'Wareing & Co Commercial Agent Particulars',
+            evidence_date: '2026-09-15',
+            confidence: 0.9,
+            evidence_notes: 'Instructed disposal agent advertising freehold sale',
+            recorded_by: 'analyst@entire-uk.com',
+            created_at: new Date().toISOString(),
+          },
+        ],
+      });
+
+      const action = evaluateDeterministicNextAction({
+        site: mockSite,
+        ownershipSummary: summary,
+        signals: [knownPlanningSignal, knownMarketSignal],
+        contradictions: emptyContradictions,
+        contactHistory: [],
+      });
+
+      assert.equal(action.code, 'CONTACT_OWNER_OR_AGENT');
+      assert.match(action.label, /Disposal Agent/);
+    });
+
+    it('Scenario 5: unknown title + no agent -> strictly requires VERIFY_TITLE before contact', () => {
+      const summary = createMockOwnership({
+        ownership_evidence_status: 'UNKNOWN',
+        ownership_evidence_records: [],
+        title_relationships: [],
+        availability_state: 'AVAILABLE', // Even if availability is claimed, no agent & unverified title blocks contact
+        acquisition_evidence: [],
+      });
+
+      const action = evaluateDeterministicNextAction({
+        site: mockSite,
+        ownershipSummary: summary,
+        signals: [knownPlanningSignal, knownMarketSignal],
+        contradictions: emptyContradictions,
+        contactHistory: [],
+      });
+
+      assert.equal(action.code, 'VERIFY_TITLE');
+      assert.match(action.rationale, /no market-facing disposal agent/);
+    });
+
+    it('Scenario 6: agent contact recorded without ownership evidence does NOT mutate ownership to verified', async () => {
+      // 1. Record contact with commercial agent
+      const contact = await recordContactAttempt({
+        site_id: mockSite.id,
+        site_reference: mockSite.internal_reference,
+        organisation_or_role: 'Bromwich Hardy (Disposal Agent)',
+        contact_type: 'agent_intermediary',
+        contact_date: new Date().toISOString(),
+        outcome: 'NO_RESPONSE',
+        notes: 'Sent introductory enquiry regarding commercial yard particulars',
+        analyst: 'analyst@entire-uk.com',
+      });
+
+      assert.ok(contact.id);
+      assert.strictEqual(contact.organisation_or_role, 'Bromwich Hardy (Disposal Agent)');
+
+      // 2. Query ownership evidence to verify it remains unmutated
+      const summary = createMockOwnership({
+        ownership_evidence_status: 'UNKNOWN',
+        ownership_evidence_records: [],
+        title_relationships: [],
+        contact_history: [contact],
+      });
+
+      assert.strictEqual(summary.ownership_evidence_status, 'UNKNOWN');
+      assert.strictEqual(summary.ownership_evidence_records.length, 0);
+
+      // 3. Next action must still require title verification before commercial gate can be completed
+      const action = evaluateDeterministicNextAction({
+        site: mockSite,
+        ownershipSummary: summary,
+        signals: [knownPlanningSignal, knownMarketSignal],
+        contradictions: emptyContradictions,
+        contactHistory: [contact],
+      });
+
+      // Since contact exists, and title is unverified, next action directs to title verification
+      assert.equal(action.code, 'VERIFY_TITLE');
+      assert.match(action.blocked_by!, /Unverified HMLR title register/);
+    });
+
+    it('Scenario 7: contact recommendation without ownership verification has prerequisites_met: true', () => {
+      const summary = createMockOwnership({
+        ownership_evidence_status: 'UNKNOWN',
+        ownership_evidence_records: [],
+        title_relationships: [],
+        availability_state: 'AVAILABLE',
+        acquisition_evidence: [
+          {
+            id: 'acq-ev-3',
+            site_id: mockSite.id,
+            site_reference: mockSite.internal_reference,
+            evidence_type: 'market_agent_intelligence',
+            actor: 'Savills Development Team',
+            actor_role: 'Disposal Agent',
+            summary: 'Open market tender launched',
+            source_reference: 'SAV-TENDER-2026',
+            contradiction_status: 'supports_prioritisation',
+            confidence: 'high',
+            interpretation: 'Agent instructions confirmed',
+            recorded_by: 'analyst@entire-uk.com',
+            created_at: new Date().toISOString(),
+          } as any,
+        ],
+      });
+
+      const action = evaluateDeterministicNextAction({
+        site: mockSite,
+        ownershipSummary: summary,
+        signals: [knownPlanningSignal, knownMarketSignal],
+        contradictions: emptyContradictions,
+        contactHistory: [],
+      });
+
+      assert.equal(action.code, 'CONTACT_OWNER_OR_AGENT');
+      assert.equal(action.prerequisites_met, true);
+      assert.strictEqual(action.blocked_by, null);
+    });
+  });
 });

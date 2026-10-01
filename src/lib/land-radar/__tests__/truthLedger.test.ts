@@ -126,7 +126,7 @@ describe('Candidate Truth Ledger & Layer Separation (Phase 10 Sections 4, 5, 17)
     // Verify automatic Layer 4 event creation
     const events = await listTruthEventsForSite('site-test-003');
     assert.strictEqual(events.length, 1);
-    assert.strictEqual(events[0].layer, 'real_world_outcome');
+    assert.strictEqual(events[0].layer, 'external_evidence');
     assert.strictEqual(events[0].event_type, 'external_evidence_received');
   });
 

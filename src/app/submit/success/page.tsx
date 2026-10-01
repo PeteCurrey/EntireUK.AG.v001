@@ -43,7 +43,7 @@ function SuccessContent() {
               <CheckCircle2 className="w-8 h-8" />
             </div>
 
-            <span className="eyebrow justify-center">Persistence Confirmed</span>
+            <span className="eyebrow justify-center">Submission Received</span>
 
             <h1 className="text-3xl sm:text-4xl font-extralight text-brand-graphite tracking-tight">
               {currentLabel.title}

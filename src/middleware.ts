@@ -3,11 +3,13 @@ import { NextRequest, NextResponse } from 'next/server';
 const AUTH_COOKIE_NAME = 'sb-access-token';
 
 const PROTECTED_PREFIXES = [
+  '/acquisitions',
   '/dashboard',
   '/land-radar',
   '/review',
   '/validation',
   '/data-health',
+  '/api/map/os-tiles',
 ];
 
 export function middleware(request: NextRequest) {
@@ -26,6 +28,14 @@ export function middleware(request: NextRequest) {
   );
 
   if (isProtected && !isAuthenticated) {
+    // If it's an internal API route, return 401 JSON instead of redirecting
+    if (pathname.startsWith('/api/')) {
+      return NextResponse.json(
+        { error: 'UNAUTHORIZED', message: 'Authentication required to access this resource.' },
+        { status: 401 }
+      );
+    }
+
     const signInUrl = new URL('/sign-in', request.url);
     signInUrl.searchParams.set('redirect', pathname);
     return NextResponse.redirect(signInUrl);
@@ -36,11 +46,13 @@ export function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
+    '/acquisitions/:path*',
     '/dashboard/:path*',
     '/land-radar/:path*',
     '/review/:path*',
     '/validation/:path*',
     '/data-health/:path*',
+    '/api/map/os-tiles/:path*',
     '/sign-in',
   ],
 };

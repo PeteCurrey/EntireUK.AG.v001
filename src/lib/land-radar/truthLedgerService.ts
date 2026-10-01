@@ -218,7 +218,7 @@ export async function recordExternalEvidence(
     await recordTruthEvent({
       site_id: input.site_id,
       site_reference: input.site_reference,
-      layer: 'real_world_outcome',
+      layer: 'external_evidence',
       event_type: 'external_evidence_received',
       actor: input.author,
       actor_role: input.author_role,
@@ -249,7 +249,7 @@ export async function recordExternalEvidence(
   await recordTruthEvent({
     site_id: input.site_id,
     site_reference: input.site_reference,
-    layer: 'real_world_outcome',
+    layer: 'external_evidence',
     event_type: 'external_evidence_received',
     actor: input.author,
     actor_role: input.author_role,

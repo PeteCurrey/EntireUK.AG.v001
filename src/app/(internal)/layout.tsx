@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import { BrandMark } from '@/components/ui/BrandMark';
 import { getCurrentUser } from '@/lib/auth/session';
 import { LogOut } from 'lucide-react';
@@ -10,6 +11,10 @@ export default async function InternalLayout({
   children: React.ReactNode;
 }) {
   const user = await getCurrentUser();
+
+  if (!user) {
+    redirect('/sign-in');
+  }
 
   return (
     <div className="min-h-screen bg-brand-obsidian text-white flex flex-col font-sans">
