@@ -436,7 +436,7 @@ export default async function SiteReviewDetailPage({ params }: PageProps) {
     <div className="space-y-8">
       {/* Navigation breadcrumb */}
       <div className="flex items-center space-x-2 text-xs font-mono text-brand-steel">
-        <Link href="/land-radar" className="hover:text-cyan-400 transition-colors">
+        <Link href="/dashboard/land-radar" className="hover:text-cyan-400 transition-colors">
           ← Back to Candidate Explorer
         </Link>
         <span>/</span>

@@ -5,7 +5,6 @@ const AUTH_COOKIE_NAME = 'sb-access-token';
 const PROTECTED_PREFIXES = [
   '/acquisitions',
   '/dashboard',
-  '/land-radar',
   '/review',
   '/validation',
   '/data-health',
@@ -48,7 +47,6 @@ export const config = {
   matcher: [
     '/acquisitions/:path*',
     '/dashboard/:path*',
-    '/land-radar/:path*',
     '/review/:path*',
     '/validation/:path*',
     '/data-health/:path*',

@@ -87,15 +87,14 @@ export function Header() {
                   })}
                 </nav>
 
-                {/* Desktop CTAs: Distinct separation between Public Submission and Internal Platform */}
-                <div className="hidden lg:flex items-center gap-3">
+                {/* Desktop CTAs: Principal commercial submission primary, subtle portal link */}
+                <div className="hidden lg:flex items-center gap-4">
                   <Link
-                    href="/dashboard"
-                    className="text-xs font-light tracking-wider uppercase text-brand-mist/80 hover:text-white px-3 py-2 rounded-sm border border-white/10 hover:border-cyan-400/50 hover:bg-white/[0.03] transition-all flex items-center gap-2"
-                    title="Internal Land Radar intelligence platform"
+                    href="/sign-in"
+                    className="text-xs font-light tracking-wider uppercase text-brand-mist/70 hover:text-white px-2 py-1.5 transition-colors"
+                    title="Authorised Personnel Portal"
                   >
-                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
-                    <span>Land Radar Login</span>
+                    <span>Sign In</span>
                   </Link>
 
                   <Button
@@ -116,15 +115,6 @@ export function Header() {
 
                 {/* Mobile Menu Controls */}
                 <div className="flex items-center gap-2 lg:hidden">
-                  <Link
-                    href="/dashboard"
-                    className="text-xs text-brand-mist hover:text-white px-2.5 py-1.5 rounded-sm border border-white/10 flex items-center gap-1.5"
-                    title="Land Radar Login"
-                  >
-                    <Compass className="w-3 h-3 text-cyan-400" />
-                    <span className="text-[11px] font-mono">Radar</span>
-                  </Link>
-
                   <Button
                     href={PRIMARY_CTA.href}
                     variant="primary"
@@ -189,17 +179,17 @@ export function Header() {
 
           <div className="pt-6 border-t border-white/[0.08] space-y-4">
             {/* Dedicated Internal Platform Entry */}
-            <div className="p-3.5 rounded-sm bg-brand-carbon border border-cyan-500/30 flex items-center justify-between">
+            <div className="p-3.5 rounded-sm bg-brand-carbon border border-white/10 flex items-center justify-between">
               <div className="flex items-center gap-2.5">
-                <Compass className="w-4 h-4 text-cyan-400" />
+                <Compass className="w-4 h-4 text-brand-electric" />
                 <div>
-                  <span className="text-xs font-medium text-white block">Entire UK Land Radar</span>
-                  <span className="text-[10px] text-brand-silver font-light">Internal intelligence workstation</span>
+                  <span className="text-xs font-medium text-white block">Authorised Personnel</span>
+                  <span className="text-[10px] text-brand-silver font-light">Internal intelligence portal</span>
                 </div>
               </div>
               <Link
-                href="/dashboard"
-                className="px-2.5 py-1 text-xs font-medium text-cyan-400 bg-cyan-500/10 border border-cyan-500/25 rounded-sm hover:bg-cyan-500/20"
+                href="/sign-in"
+                className="px-2.5 py-1 text-xs font-medium text-white bg-white/10 border border-white/15 rounded-sm hover:bg-white/20"
               >
                 Sign In →
               </Link>

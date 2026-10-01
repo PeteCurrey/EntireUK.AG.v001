@@ -7,16 +7,19 @@ export const SITE_CONFIG = {
     "Entire UK identifies and sources land and property opportunities with development potential, unlocking long-term commercial value through planning, acquisition, funding and delivery.",
   email: "opportunities@entire-uk.com",
   phone: "+44 (0) 20 4617 0228",
-  location: "London & Nationwide Hubs",
+  location: "United Kingdom",
   parentBrand: "Entire",
   sisterCompany: "EntireFM",
   sisterCompanyUrl: "https://www.entirefm.com",
+  statutoryNotice:
+    "Entire UK Development Limited is a principal property acquisition, development and land promotion company registered in England and Wales. We are not an estate agency, broker, fund, or SaaS vendor.",
 };
 
 export const NAV_LINKS = [
   { label: "Opportunities", href: "/opportunities" },
+  { label: "Criteria", href: "/criteria" },
   { label: "Our Approach", href: "/approach" },
-  { label: "Technology", href: "/technology" },
+  { label: "Land Radar", href: "/land-radar" },
   { label: "About", href: "/about" },
   { label: "Contact", href: "/contact" },
 ];
@@ -64,30 +67,32 @@ export const SUBMISSION_TYPES = {
 export const FOOTER_LINKS = {
   company: [
     { label: "About Entire UK", href: "/about" },
-    { label: "Our 7-Stage Approach", href: "/approach" },
+    { label: "Our Approach", href: "/approach" },
+    { label: "Acquisition Criteria", href: "/criteria" },
+    { label: "Land Radar Methodology", href: "/land-radar" },
     { label: "Opportunity Typologies", href: "/opportunities" },
-    { label: "Technology & Land Radar", href: "/technology" },
     { label: "EntireFM Built Environment", href: "https://www.entirefm.com", external: true },
   ],
   acquisition: [
-    { label: "What We Look For", href: "/#what-we-look-for" },
-    { label: "Acquisition Brief", href: "/#acquisition-brief" },
+    { label: "Acquisition Parameters", href: "/criteria" },
     { label: "Site Anatomy (8 Dimensions)", href: "/opportunities#site-anatomy" },
     { label: "Commercial Structuring", href: "/approach#deal-structures" },
-    { label: "Authorised Analyst Workstation", href: "/dashboard" },
+    { label: "Rejection Standards", href: "/criteria#fatal-constraints" },
+    { label: "Regional Focus", href: "/criteria#geographic-focus" },
   ],
   submissions: [
     { label: "Submit Your Land", href: "/submit/land" },
     { label: "Submit a Property", href: "/submit/property" },
     { label: "Submit an Opportunity", href: "/submit/opportunity" },
     { label: "Partner With Us", href: "/submit/partner" },
-    { label: "Submission Gateway", href: "/submit" },
+    { label: "Intake Gateway", href: "/submit" },
   ],
   legal: [
     { label: "Privacy Policy", href: "/privacy" },
     { label: "Terms of Website Use", href: "/terms" },
     { label: "Cookie Policy", href: "/cookies" },
     { label: "Contact Us", href: "/contact" },
+    { label: "Authorised Portal", href: "/sign-in" },
   ],
 };
 

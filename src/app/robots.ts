@@ -9,8 +9,8 @@ export default function robots(): MetadataRoute.Robots {
       disallow: [
         "/api/",
         "/submit/success",
+        "/acquisitions",
         "/dashboard",
-        "/land-radar",
         "/review",
         "/validation",
         "/data-health",

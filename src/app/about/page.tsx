@@ -276,6 +276,47 @@ export default function AboutPage() {
             ))}
           </div>
 
+          {/* Statutory Corporate Details */}
+          <div className="mt-16 p-8 rounded-sm bg-white border border-brand-edge shadow-sm max-w-4xl mx-auto">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-brand-edge pb-4 mb-4">
+              <div>
+                <span className="text-[11px] font-mono uppercase tracking-widest text-brand-electric font-semibold">
+                  Statutory Entity &amp; Governance
+                </span>
+                <h3 className="text-xl font-normal text-brand-graphite mt-0.5">
+                  Entire UK Development Limited
+                </h3>
+              </div>
+              <span className="text-xs font-mono text-brand-silver bg-brand-surface px-3 py-1 rounded-sm border border-brand-edge w-fit">
+                England &amp; Wales
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-xs font-light text-brand-silver">
+              <div className="space-y-2">
+                <p>
+                  <strong className="text-brand-graphite font-medium">Nature of Business:</strong>{" "}
+                  Principal property acquisition, strategic land promotion, and commercial property development across England, Scotland, and Wales.
+                </p>
+                <p>
+                  <strong className="text-brand-graphite font-medium">Regulatory Position:</strong>{" "}
+                  Entire UK Development Limited acts as an uncompromised principal buyer and partner. We are expressly not an estate agency, mortgage broker, financial adviser, or SaaS software vendor.
+                </p>
+              </div>
+
+              <div className="space-y-2">
+                <p>
+                  <strong className="text-brand-graphite font-medium">Group Synergy:</strong>{" "}
+                  Sister company to EntireFM (<a href="https://www.entirefm.com" target="_blank" rel="noopener noreferrer" className="text-brand-electric hover:underline">entirefm.com</a>) within the Entire ecosystem, incorporating facilities management, mechanical &amp; electrical compliance, and asset operations.
+                </p>
+                <p>
+                  <strong className="text-brand-graphite font-medium">Capital Deployment:</strong>{" "}
+                  Acquisitions and promotion funding are executed using private capital and aligned institutional development funding facilities.
+                </p>
+              </div>
+            </div>
+          </div>
+
           {/* Contact CTA */}
           <div className="mt-16 text-center">
             <h3 className="text-2xl font-light text-brand-graphite mb-2">

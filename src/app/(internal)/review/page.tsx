@@ -36,7 +36,7 @@ export default async function ReviewQueuePage() {
 
         <div className="flex items-center space-x-3">
           <Link
-            href="/land-radar"
+            href="/dashboard/land-radar"
             className="px-3.5 py-1.5 bg-cyan-500 hover:bg-cyan-400 text-brand-obsidian font-semibold text-xs rounded transition-colors flex items-center space-x-1.5"
           >
             <span>Open Map Workstation →</span>

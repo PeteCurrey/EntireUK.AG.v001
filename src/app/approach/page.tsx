@@ -218,6 +218,101 @@ export default function ApproachPage() {
         </Container>
       </Section>
 
+      {/* When We Walk Away: Stage-Gate Exit Criteria */}
+      <Section dark={true} className="border-y border-brand-edge-dark">
+        <Container>
+          <div className="max-w-3xl mb-12">
+            <span className="eyebrow eyebrow-dark block mb-2">Capital &amp; Risk Discipline</span>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extralight tracking-tight text-white leading-tight">
+              When We Walk Away: Disciplined Exit Gates
+            </h2>
+            <p className="mt-4 text-base sm:text-lg font-light text-brand-mist/80 leading-relaxed">
+              Every stage of our acquisition model has defined termination criteria. If a defect cannot be solved legally or commercially, we abort the acquisition rather than gambling balance-sheet capital or partner time.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="p-6 rounded-sm bg-brand-carbon border border-white/10 space-y-3">
+              <div className="flex items-center justify-between border-b border-white/[0.08] pb-2">
+                <span className="text-xs font-mono uppercase tracking-wider text-rose-400">
+                  Gate 1 Exit
+                </span>
+                <span className="text-[10px] font-mono text-brand-mist/60">Spatial Screening</span>
+              </div>
+              <h3 className="text-base font-medium text-white">Statutory &amp; Physical Blockers</h3>
+              <p className="text-xs font-light text-brand-mist/75 leading-relaxed">
+                Sites situated in Flood Zone 3b (Functional Floodplain), Ancient Woodland, or SSSI buffers are terminated immediately. No exceptions for speculative political lobbying.
+              </p>
+            </div>
+
+            <div className="p-6 rounded-sm bg-brand-carbon border border-white/10 space-y-3">
+              <div className="flex items-center justify-between border-b border-white/[0.08] pb-2">
+                <span className="text-xs font-mono uppercase tracking-wider text-rose-400">
+                  Gate 2 Exit
+                </span>
+                <span className="text-[10px] font-mono text-brand-mist/60">Due Diligence</span>
+              </div>
+              <h3 className="text-base font-medium text-white">Unresolvable Ransoms &amp; Defective Title</h3>
+              <p className="text-xs font-light text-brand-mist/75 leading-relaxed">
+                If highway access relies on an unadopted verge where the owner cannot be identified or demands an extortionate premium that renders the development uninsurable, we walk away.
+              </p>
+            </div>
+
+            <div className="p-6 rounded-sm bg-brand-carbon border border-white/10 space-y-3">
+              <div className="flex items-center justify-between border-b border-white/[0.08] pb-2">
+                <span className="text-xs font-mono uppercase tracking-wider text-rose-400">
+                  Gate 3 Exit
+                </span>
+                <span className="text-[10px] font-mono text-brand-mist/60">Contract &amp; Commercials</span>
+              </div>
+              <h3 className="text-base font-medium text-white">Unrealistic Vendor Valuation</h3>
+              <p className="text-xs font-light text-brand-mist/75 leading-relaxed">
+                Where vendors demand unconditional completion prices based on consented land values without absorbing planning or contamination discount, we step back respectfully until market conditions realign.
+              </p>
+            </div>
+
+            <div className="p-6 rounded-sm bg-brand-carbon border border-white/10 space-y-3">
+              <div className="flex items-center justify-between border-b border-white/[0.08] pb-2">
+                <span className="text-xs font-mono uppercase tracking-wider text-rose-400">
+                  Gate 4 Exit
+                </span>
+                <span className="text-[10px] font-mono text-brand-mist/60">Planning Promotion</span>
+              </div>
+              <h3 className="text-base font-medium text-white">Unviable Planning Appeal Path</h3>
+              <p className="text-xs font-light text-brand-mist/75 leading-relaxed">
+                If a planning application is refused and leading planning counsel advises that an Inspectorate appeal has less than a defensible probability of success under NPPF guidelines, we conclude the promotion.
+              </p>
+            </div>
+
+            <div className="p-6 rounded-sm bg-brand-carbon border border-white/10 space-y-3">
+              <div className="flex items-center justify-between border-b border-white/[0.08] pb-2">
+                <span className="text-xs font-mono uppercase tracking-wider text-rose-400">
+                  Gate 5 Exit
+                </span>
+                <span className="text-[10px] font-mono text-brand-mist/60">Capital &amp; Funding</span>
+              </div>
+              <h3 className="text-base font-medium text-white">Abnormal Infrastructure Costs</h3>
+              <p className="text-xs font-light text-brand-mist/75 leading-relaxed">
+                If post-consent ground surveys or utility connection quotes (S104 drainage, S278 junctions, DNO sub-stations) introduce abnormal costs exceeding 20% of GDV, we renegotiate land price or terminate the option.
+              </p>
+            </div>
+
+            <div className="p-6 rounded-sm bg-brand-carbon border border-white/10 space-y-3">
+              <div className="flex items-center justify-between border-b border-white/[0.08] pb-2">
+                <span className="text-xs font-mono uppercase tracking-wider text-emerald-400">
+                  The Result
+                </span>
+                <span className="text-[10px] font-mono text-brand-mist/60">Disciplined Portfolio</span>
+              </div>
+              <h3 className="text-base font-medium text-white">Only Deliverable Sites Reach Delivery</h3>
+              <p className="text-xs font-light text-brand-mist/75 leading-relaxed">
+                By maintaining strict exit criteria at every stage, we ensure every consented scheme Entire UK brings forward is physically deliverable, financially viable, and institutionally investable.
+              </p>
+            </div>
+          </div>
+        </Container>
+      </Section>
+
       {/* Commercial Structuring Mechanisms */}
       <Section surface={true} id="deal-structures">
         <Container>

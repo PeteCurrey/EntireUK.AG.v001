@@ -64,7 +64,7 @@ export default async function AcquisitionsPage() {
 
         <div className="flex items-center space-x-3">
           <Link
-            href="/land-radar"
+            href="/dashboard/land-radar"
             className="px-3.5 py-1.5 bg-brand-charcoal hover:bg-brand-surface border border-brand-edge text-white font-medium text-xs rounded transition-colors flex items-center space-x-1.5"
           >
             <Compass className="w-3.5 h-3.5 text-cyan-400" />

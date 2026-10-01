@@ -16,10 +16,12 @@ export function Footer() {
             </Link>
             <p className="text-sm font-light text-brand-mist/80 max-w-sm leading-relaxed">
               Entire UK identifies, sources and assesses land and property opportunities with
-              development potential, working to unlock commercial value through planning,
+              development potential, unlocking commercial value through planning,
               acquisition, funding and development.
             </p>
             <div className="pt-2 text-xs font-light text-brand-mist/60 space-y-1">
+              <p className="text-white/80 font-normal">{SITE_CONFIG.legalName}</p>
+              <p>Registered in England and Wales.</p>
               <p>Sister company to EntireFM within the Entire ecosystem.</p>
               <p>Operating across England, Scotland and Wales.</p>
             </div>
@@ -56,10 +58,10 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Acquisition Criteria & Workstation */}
-          <div className="lg:col-span-3 space-y-4">
+          {/* Acquisition Criteria & Method */}
+          <div className="lg:col-span-2 space-y-4">
             <h4 className="text-xs font-medium uppercase tracking-widest text-brand-mist/50">
-              Acquisition &amp; Radar
+              Acquisition &amp; Sourcing
             </h4>
             <ul className="space-y-2.5 text-sm font-light text-brand-mist/80">
               {FOOTER_LINKS.acquisition.map((item) => (
@@ -97,7 +99,7 @@ export function Footer() {
           {/* Governance & Contact */}
           <div className="lg:col-span-2 space-y-4">
             <h4 className="text-xs font-medium uppercase tracking-widest text-brand-mist/50">
-              Contact &amp; Legal
+              Governance &amp; Legal
             </h4>
             <ul className="space-y-2.5 text-sm font-light text-brand-mist/80">
               {FOOTER_LINKS.legal.map((item) => (
@@ -117,11 +119,12 @@ export function Footer() {
         {/* Bottom Bar */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-light text-brand-mist/50">
           <p>
-            &copy; {new Date().getFullYear()} {SITE_CONFIG.name}. All rights reserved.
+            &copy; {new Date().getFullYear()} {SITE_CONFIG.legalName}. All rights reserved.
           </p>
-          <p className="text-center sm:text-right max-w-md">
-            Entire UK assesses land and property opportunities for development potential.
-            Information provided on this site does not constitute financial or investment advice.
+          <p className="text-center sm:text-right max-w-lg">
+            Entire UK Development Limited acts as a principal land buyer, promoter and developer.
+            We are not an estate agency, broker, fund, or SaaS software vendor. Information on this site
+            does not constitute investment, financial, or legal advice.
           </p>
         </div>
       </div>

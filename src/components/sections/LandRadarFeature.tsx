@@ -415,20 +415,20 @@ export function LandRadarFeature() {
             {/* Bottom Callout Bar */}
             <div className="mt-6 pt-6 border-t border-white/[0.08] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div>
-                <span className="text-[10px] font-mono uppercase tracking-widest text-brand-mist/60">
-                  Authorised Personnel Access
+                <span className="text-[10px] font-mono uppercase tracking-widest text-cyan-400">
+                  Spatial Diligence Methodology
                 </span>
                 <p className="text-xs font-light text-brand-mist/80 mt-0.5">
-                  Internal workstation with live pilot datasets across Warwick &amp; Rugby.
+                  Learn how Land Radar screens titles, adopted highways, and statutory constraints across the UK.
                 </p>
               </div>
               <div className="flex items-center gap-3">
                 <Link
-                  href="/dashboard"
+                  href="/land-radar"
                   className="px-3.5 py-1.5 rounded-sm bg-white/10 hover:bg-white/15 text-white text-xs font-medium border border-white/20 transition-colors flex items-center gap-1.5"
                 >
-                  <Lock className="w-3 h-3 text-cyan-400" />
-                  <span>Land Radar Login</span>
+                  <Compass className="w-3.5 h-3.5 text-cyan-400" />
+                  <span>Land Radar Methodology →</span>
                 </Link>
                 <Button href="/submit" variant="primary" size="sm" showArrow>
                   Submit Site

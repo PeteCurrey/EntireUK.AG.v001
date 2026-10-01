@@ -95,7 +95,7 @@ export function Hero() {
             <div className="animate-hero-eyebrow">
               <div className="inline-flex items-center gap-2.5 px-3 py-1 rounded-sm bg-white/[0.04] border border-white/10 text-brand-mist/90 text-xs font-light tracking-widest uppercase">
                 <span className="w-1.5 h-1.5 rounded-full bg-brand-electric animate-pulse" />
-                <span>UK Property Acquisition &amp; Development</span>
+                <span>Principal Land Buyer &amp; Developer · Not a Broker</span>
               </div>
             </div>
 
@@ -116,19 +116,19 @@ export function Hero() {
             </div>
 
             {/* Entrance Sequence: CTAs */}
-            <div className="animate-hero-cta flex flex-wrap items-center gap-4 pt-2">
+            <div className="animate-hero-cta flex flex-wrap items-center gap-3 pt-2">
               <Button href="/submit" variant="primary" size="lg" showArrow>
                 Submit an Opportunity
               </Button>
-              <Button href="/approach" variant="ghost" size="lg">
-                How We Work
+              <Button href="/criteria" variant="secondary" size="lg">
+                Acquisition Criteria
               </Button>
               <Link
-                href="/dashboard"
-                className="inline-flex items-center gap-2 text-xs font-light tracking-wide text-brand-mist/75 hover:text-white px-3 py-2 rounded-sm border border-white/10 hover:border-cyan-400/40 hover:bg-white/[0.02] transition-colors"
+                href="/land-radar"
+                className="inline-flex items-center gap-2 text-xs font-light tracking-wide text-brand-mist/75 hover:text-white px-3 py-2.5 rounded-sm border border-white/10 hover:border-cyan-400/40 hover:bg-white/[0.02] transition-colors"
               >
                 <Compass className="w-3.5 h-3.5 text-cyan-400" />
-                <span>Land Radar Workstation →</span>
+                <span>Land Radar Methodology →</span>
               </Link>
             </div>
 

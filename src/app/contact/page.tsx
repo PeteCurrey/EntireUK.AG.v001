@@ -230,12 +230,15 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <span className="font-mono uppercase text-[10px] text-brand-silver block mb-0.5">
-                      Head Office &amp; Operations
+                      Statutory Entity &amp; Headquarters
                     </span>
                     <span className="font-medium text-brand-graphite text-sm block">
-                      {SITE_CONFIG.location}
+                      {SITE_CONFIG.legalName}
                     </span>
-                    <span className="text-[11px] text-brand-silver">
+                    <span className="text-[11px] text-brand-silver block">
+                      Registered in England &amp; Wales · {SITE_CONFIG.location}
+                    </span>
+                    <span className="text-[10px] text-brand-silver/70 block mt-0.5">
                       Operating across England, Scotland &amp; Wales
                     </span>
                   </div>

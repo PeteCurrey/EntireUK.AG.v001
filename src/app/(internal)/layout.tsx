@@ -50,7 +50,7 @@ export default async function InternalLayout({
               Dashboard
             </Link>
             <Link
-              href="/land-radar"
+              href="/dashboard/land-radar"
               className="text-cyan-400 hover:text-cyan-300 font-semibold transition-colors flex items-center space-x-1.5"
             >
               <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />

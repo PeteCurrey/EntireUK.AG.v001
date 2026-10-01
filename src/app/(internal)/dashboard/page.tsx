@@ -66,7 +66,7 @@ export default async function DashboardPage() {
 
         <div className="flex items-center gap-3">
           <Link
-            href="/land-radar"
+            href="/dashboard/land-radar"
             className="px-4 py-2 bg-cyan-500 hover:bg-cyan-400 text-brand-obsidian font-medium text-xs rounded transition-colors flex items-center space-x-1.5 shadow-sm"
           >
             <Compass className="w-3.5 h-3.5" />
@@ -98,7 +98,7 @@ export default async function DashboardPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {/* 1. Land Radar Explorer */}
           <Link
-            href="/land-radar"
+            href="/dashboard/land-radar"
             className="group p-5 rounded-sm bg-brand-surface border border-brand-edge hover:border-cyan-400/60 transition-all duration-200 flex flex-col justify-between"
           >
             <div>

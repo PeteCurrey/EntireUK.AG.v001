@@ -50,8 +50,17 @@ export function AcquisitionBriefSection() {
               What We Are Looking For
             </h2>
             <p className="mt-4 text-base sm:text-lg font-light text-brand-silver leading-relaxed">
-              Entire UK operates as a disciplined principal buyer and development partner backed by committed capital. We evaluate all opportunities against clear planning, environmental and commercial criteria.
+              Entire UK operates as a disciplined principal buyer and development partner utilizing private capital and aligned development funding. We evaluate all opportunities against clear planning, environmental and commercial criteria.
             </p>
+            <div className="pt-3">
+              <Link
+                href="/criteria"
+                className="inline-flex items-center gap-1.5 text-xs font-mono uppercase tracking-wider text-brand-electric hover:underline"
+              >
+                <span>View Full Acquisition Criteria &amp; Rejection Standards</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
           </div>
         </ScrollReveal>
 

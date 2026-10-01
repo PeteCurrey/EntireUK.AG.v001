@@ -222,6 +222,95 @@ export default function OpportunitiesPage() {
         </Container>
       </Section>
 
+      {/* Editorial Deep Dive: Why Good Sites Get Overlooked */}
+      <Section dark={true} className="border-y border-brand-edge-dark">
+        <Container>
+          <div className="max-w-3xl mb-12">
+            <span className="eyebrow eyebrow-dark block mb-2">Cadastral Reality &amp; Due Diligence</span>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extralight tracking-tight text-white leading-tight">
+              Why Good Sites Get Overlooked
+            </h2>
+            <p className="mt-4 text-base sm:text-lg font-light text-brand-mist/80 leading-relaxed">
+              In UK property development, conventional buyers frequently miss valuable opportunities due to surface-level assumptions or misdiagnosed constraints. Unlocking value requires understanding the gap between visual appearances and statutory cadastral realities.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="p-7 rounded-sm bg-brand-carbon border border-white/10 space-y-4">
+              <div className="flex items-center justify-between border-b border-white/[0.08] pb-3">
+                <span className="text-xs font-mono uppercase tracking-widest text-cyan-400">
+                  Cadastral Principle #1
+                </span>
+                <span className="text-[11px] font-mono text-brand-mist/60">Geometry ≠ Legal Title</span>
+              </div>
+              <h3 className="text-xl font-normal text-white">
+                Parcel vs. Title: The Cadastral Illusion
+              </h3>
+              <p className="text-xs sm:text-sm font-light text-brand-mist/80 leading-relaxed">
+                A physical boundary shown on an aerial photograph or OS map is rarely a single clean title. A single farm field or industrial yard may encompass three separate freehold titles, a historic agricultural leasehold, an unregistered ditch, and a utility easement.
+              </p>
+              <p className="text-xs font-light text-brand-mist/70 leading-relaxed">
+                Conventional housebuilders often walk away when title checks reveal multi-ownership fragmentation. Entire UK uses Land Radar to map the exact relationship between physical parcels and HMLR title indices, structuring consortium agreements to assemble clean, insurable development sites.
+              </p>
+            </div>
+
+            <div className="p-7 rounded-sm bg-brand-carbon border border-white/10 space-y-4">
+              <div className="flex items-center justify-between border-b border-white/[0.08] pb-3">
+                <span className="text-xs font-mono uppercase tracking-widest text-amber-400">
+                  Cadastral Principle #2
+                </span>
+                <span className="text-[11px] font-mono text-brand-mist/60">Visibility ≠ Right of Way</span>
+              </div>
+              <h3 className="text-xl font-normal text-white">
+                Access vs. Proximity: The 50-Metre Trap
+              </h3>
+              <p className="text-xs sm:text-sm font-light text-brand-mist/80 leading-relaxed">
+                Being 20 metres from an adopted highway is worthless if the intervening grass verge is an unregistered strip or held under a third-party title. Without a formal statutory easement or Section 278 agreement, a £10m development can be completely stopped by a 1-metre ransom.
+              </p>
+              <p className="text-xs font-light text-brand-mist/70 leading-relaxed">
+                We verify highway boundary adoptions against county highway terrier records before negotiating. Where a genuine ransom exists, we formulate commercial equalisation terms rather than abandoning viable opportunities.
+              </p>
+            </div>
+
+            <div className="p-7 rounded-sm bg-brand-carbon border border-white/10 space-y-4">
+              <div className="flex items-center justify-between border-b border-white/[0.08] pb-3">
+                <span className="text-xs font-mono uppercase tracking-widest text-emerald-400">
+                  Epistemic Principle #3
+                </span>
+                <span className="text-[11px] font-mono text-brand-mist/60">No Record ≠ No Constraint</span>
+              </div>
+              <h3 className="text-xl font-normal text-white">
+                Unknown is Not Clear
+              </h3>
+              <p className="text-xs sm:text-sm font-light text-brand-mist/80 leading-relaxed">
+                Many modern property portals display green &ldquo;cleared&rdquo; badges when public records lack data. In truth, absence of an environmental record simply means no prior intrusive survey was performed.
+              </p>
+              <p className="text-xs font-light text-brand-mist/70 leading-relaxed">
+                We treat unverified attributes as UNKNOWN until verified against authoritative source data. This discipline avoids expensive surprises and protects our capital and partners from discovering unrecorded easements or mine workings post-exchange.
+              </p>
+            </div>
+
+            <div className="p-7 rounded-sm bg-brand-carbon border border-white/10 space-y-4">
+              <div className="flex items-center justify-between border-b border-white/[0.08] pb-3">
+                <span className="text-xs font-mono uppercase tracking-widest text-purple-400">
+                  Planning Principle #4
+                </span>
+                <span className="text-[11px] font-mono text-brand-mist/60">Policy Presumption</span>
+              </div>
+              <h3 className="text-xl font-normal text-white">
+                Housing Land Supply Deficits (5YHLS)
+              </h3>
+              <p className="text-xs sm:text-sm font-light text-brand-mist/80 leading-relaxed">
+                Many edge-of-settlement parcels are deemed &ldquo;impossible&rdquo; because they lie outside current local plan boundaries. However, where a Local Planning Authority cannot demonstrate a 5-year housing land supply, the NPPF paragraph 11 presumption in favour of sustainable development engages.
+              </p>
+              <p className="text-xs font-light text-brand-mist/70 leading-relaxed">
+                We identify districts with acute supply shortfalls and align technical design with sustainability criteria, creating defensible planning pathways that unlock unallocated land.
+              </p>
+            </div>
+          </div>
+        </Container>
+      </Section>
+
       {/* Interactive Opportunity Anatomy Explorer */}
       <Section surface={true} id="site-anatomy">
         <Container>

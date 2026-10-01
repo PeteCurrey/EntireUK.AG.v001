@@ -36,7 +36,7 @@ export default function TermsPage() {
           <section className="space-y-3">
             <h2 className="text-xl font-normal text-brand-graphite">2. Nature of the Company</h2>
             <p>
-              Entire UK is a land acquisition and property development company. We are <strong>not</strong> an estate agency, mortgage broker, financial advisor, property investment scheme, training academy, or collective investment undertaking.
+              Entire UK Development Limited is a private company registered in England and Wales, operating as a principal land buyer, promoter, and property developer. We are <strong>not</strong> an estate agency, mortgage broker, financial advisor, property investment scheme, training academy, or collective investment undertaking.
             </p>
             <p>
               Nothing on this website constitutes financial, legal, tax, or investment advice. Any financial metrics, planning discussions, or case studies presented represent general illustrative frameworks and do not guarantee future performance or specific planning approvals.

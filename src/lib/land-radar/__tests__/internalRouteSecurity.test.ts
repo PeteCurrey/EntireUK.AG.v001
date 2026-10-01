@@ -9,7 +9,7 @@ describe('SEC-013-01: Defence-in-Depth Internal Route Protection', () => {
     '/acquisitions',
     '/acquisitions/site-warwick-001',
     '/dashboard',
-    '/land-radar',
+    '/dashboard/land-radar',
     '/review',
     '/review/site-warwick-001',
     '/validation',
@@ -60,6 +60,8 @@ describe('SEC-013-01: Defence-in-Depth Internal Route Protection', () => {
   it('allows unauthenticated visitors to view public marketing and submission pages', () => {
     const publicPaths = [
       '/',
+      '/criteria',
+      '/land-radar',
       '/about',
       '/approach',
       '/contact',

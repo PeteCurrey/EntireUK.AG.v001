@@ -51,7 +51,7 @@ export default async function ValidationDashboardPage() {
         </div>
         <div className="flex items-center space-x-3">
           <Link
-            href="/land-radar"
+            href="/dashboard/land-radar"
             className="text-xs font-mono text-cyan-400 hover:text-cyan-300 transition-colors"
           >
             ← Land Radar Explorer

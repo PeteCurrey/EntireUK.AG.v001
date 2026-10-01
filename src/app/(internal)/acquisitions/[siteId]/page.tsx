@@ -249,7 +249,7 @@ export default async function AcquisitionCandidatePage({ params }: PageProps) {
           </Link>
           <span className="text-brand-steel">·</span>
           <Link
-            href="/land-radar"
+            href="/dashboard/land-radar"
             className="text-xs text-brand-silver hover:text-cyan-400 transition-colors flex items-center gap-1"
           >
             <Compass className="w-3 h-3 text-cyan-400" />

@@ -332,12 +332,18 @@ export default function TechnologyPage() {
                     <span className="text-amber-400">Active · Preserves Discrepancies</span>
                   </div>
                 </div>
-                <div className="pt-2 text-center">
+                <div className="pt-3 border-t border-white/[0.08] flex flex-col sm:flex-row items-center justify-between gap-3">
                   <Link
-                    href="/dashboard"
-                    className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-cyan-400 hover:underline"
+                    href="/land-radar"
+                    className="text-xs font-mono uppercase tracking-wider text-cyan-400 hover:underline flex items-center gap-1"
                   >
-                    <span>Authorised Analyst Sign-In →</span>
+                    <span>Land Radar Methodology →</span>
+                  </Link>
+                  <Link
+                    href="/sign-in"
+                    className="text-[11px] font-mono uppercase tracking-wider text-brand-mist/60 hover:text-white"
+                  >
+                    <span>Authorised Sign-In</span>
                   </Link>
                 </div>
               </div>
